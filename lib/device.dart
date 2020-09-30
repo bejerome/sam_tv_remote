@@ -47,6 +47,7 @@ class SamsungSmartTV {
         wsapi = "wss://$host:8002/api/v2/",
         services = [];
 
+  // ignore: slash_for_doc_comments
   /**
      * add UPNP service
      * @param [Object] service  UPNP service description
@@ -72,14 +73,17 @@ class SamsungSmartTV {
 
     // establish socket connection
     final appNameBase64 = base64.encode(utf8.encode(appName));
-    String channel = "${wsapi}channels/samsung.remote.control?name=$appNameBase64";
+    String channel =
+        "${wsapi}channels/samsung.remote.control?name=$appNameBase64";
     if (token != null) {
       channel += '&token=$token';
     }
 
     // log.info(`Connect to ${channel}`)
     // ws = IOWebSocketChannel.connect(channel);
-    ws = IOWebSocketChannel.connect(channel, badCertificateCallback: (X509Certificate cert, String host, int port) => true);
+    ws = IOWebSocketChannel.connect(channel,
+        badCertificateCallback: (X509Certificate cert, String host, int port) =>
+            true);
 
     ws.stream.listen((message) {
       // timer?.cancel();
@@ -177,12 +181,18 @@ class SamsungSmartTV {
 
         Uri locaion = Uri.parse(client.location);
 
-        final deviceExists = tvs.firstWhere((tv) => tv.host == locaion.host, orElse: () => null);
+        final deviceExists =
+            tvs.firstWhere((tv) => tv.host == locaion.host, orElse: () => null);
 
         if (deviceExists == null) {
           print("Found ${device.friendlyName} on IP ${locaion.host}");
           final tv = SamsungSmartTV(host: locaion.host);
-          tv.addService({"location": client.location, "server": client.server, "st": client.st, "usn": client.usn});
+          tv.addService({
+            "location": client.location,
+            "server": client.server,
+            "st": client.st,
+            "usn": client.usn
+          });
           tvs.add(tv);
         }
       } catch (e, stack) {
@@ -191,7 +201,8 @@ class SamsungSmartTV {
       }
     }).onDone(() {
       if (tvs.isEmpty) {
-        completer.completeError("No Samsung TVs found. Make sure the UPNP protocol is enabled in your network.");
+        completer.completeError(
+            "No Samsung TVs found. Make sure the UPNP protocol is enabled in your network.");
       }
       completer.complete(tvs.first);
     });

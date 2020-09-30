@@ -8,7 +8,7 @@
       "name": "Remote",
       "type": "dart",
       "request": "launch",
-      "program": "lib/remote.dart"
+      "program": "lib/main.dart"
     },
     {
       "name": "Flutter",
