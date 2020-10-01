@@ -35,12 +35,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   BehaviorSubject<int> willAcceptStream;
 
-  Color background = AppColors.lightBackground;
-  Color text = AppColors.lightText;
-  Color select = AppColors.lightSelect;
-  Color icon = AppColors.lightIcon;
-  Color buttonBackground = AppColors.lightButtonBackground;
-  Color iconButton = AppColors.lightIconButton;
+  Color backgroundColor = AppColors.darkBackground;
+  Color textColor = AppColors.darkText;
+  Color selectColor = AppColors.darkSelect;
+  Color iconColor = AppColors.darkIcon;
+  Color buttonBackgroundColor = AppColors.darkButtonBackground;
+  Color iconButtonColor = AppColors.darkIconButton;
 
   @override
   void initState() {
@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MyHomePage> {
       child: Container(
         width: size.width,
         height: size.height,
-        color: background,
+        color: backgroundColor,
         child: FittedBox(
           fit: BoxFit.contain,
           alignment: Alignment.center,
@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             text: 'Samsung',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: text,
+                              color: textColor,
                               fontSize: 20,
                             ),
                             children: <TextSpan>[
@@ -95,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 text: 'Remote',
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
-                                  color: text,
+                                  color: textColor,
                                   fontSize: 20,
                                 ),
                               ),
@@ -105,12 +105,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         Spacer(),
                         Icon(
                           Icons.personal_video,
-                          color: select,
+                          color: selectColor,
                           size: 28,
                         ),
                         Icon(
                           Icons.keyboard_arrow_down,
-                          color: select,
+                          color: selectColor,
                           size: 28,
                         ),
                       ],
@@ -129,7 +129,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         height: size.height * 0.08,
                         child: Icon(
                           Icons.volume_down,
-                          color: icon,
+                          color: iconColor,
                           size: 28,
                         ),
                       ),
@@ -137,24 +137,24 @@ class _MyHomePageState extends State<MyHomePage> {
                         onTap: () {
                           setState(
                             () {
-                              background =
-                                  background == AppColors.darkBackground
+                              backgroundColor =
+                                  backgroundColor == AppColors.darkBackground
                                       ? AppColors.lightBackground
                                       : AppColors.darkBackground;
-                              text = text == AppColors.darkext
+                              textColor = textColor == AppColors.darkText
                                   ? AppColors.lightText
-                                  : AppColors.darkext;
-                              select = select == AppColors.darkSelect
+                                  : AppColors.darkText;
+                              selectColor = selectColor == AppColors.darkSelect
                                   ? AppColors.lightSelect
                                   : AppColors.darkSelect;
-                              icon = icon == AppColors.darkIcon
+                              iconColor = iconColor == AppColors.darkIcon
                                   ? AppColors.lightIcon
                                   : AppColors.darkIcon;
-                              iconButton =
-                                  iconButton == AppColors.darkIconButton
+                              iconButtonColor =
+                                  iconButtonColor == AppColors.darkIconButton
                                       ? AppColors.lightIconButton
                                       : AppColors.darkIconButton;
-                              buttonBackground = buttonBackground ==
+                              buttonBackgroundColor = buttonBackgroundColor ==
                                       AppColors.darkButtonBackground
                                   ? AppColors.lightButtonBackground
                                   : AppColors.darkButtonBackground;
@@ -169,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           width: size.height * 0.11,
                           height: size.height * 0.11,
                           decoration: new BoxDecoration(
-                            color: buttonBackground,
+                            color: buttonBackgroundColor,
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
@@ -184,7 +184,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         height: size.height * 0.08,
                         child: Icon(
                           Icons.filter_list,
-                          color: icon,
+                          color: iconColor,
                           size: 28,
                         ),
                       ),
@@ -199,10 +199,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: <Widget>[
                       CustomButton(
                         size: size,
-                        buttonBackground: buttonBackground,
+                        buttonBackground: buttonBackgroundColor,
                         buttonLabel: "Vol",
-                        iconButton: iconButton,
-                        textColor: text,
+                        iconColor: iconButtonColor,
+                        textColor: textColor,
                         upIcon: Icons.add,
                         upIconCallBack: () {
                           print("Vol up");
@@ -212,46 +212,25 @@ class _MyHomePageState extends State<MyHomePage> {
                           print("Vol down");
                         },
                       ),
-                      Container(
-                        padding: EdgeInsets.all(2),
-                        width: size.width * 0.1,
-                        height: size.width * 0.1,
-                        decoration: new BoxDecoration(
-                          gradient: new LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [
-                              Colors.blue,
-                              Colors.pink,
-                            ],
-                          ),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Container(
-                          padding: EdgeInsets.all(18),
-                          width: size.width * 0.4,
-                          height: size.width * 0.4,
-                          decoration: new BoxDecoration(
-                            color: background,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
+                      CustomCircle(
+                        size: size,
+                        background: backgroundColor,
                       ),
                       Container(
                         width: size.width * 0.20,
                         height: size.height * 0.25,
                         decoration: new BoxDecoration(
-                          color: buttonBackground,
+                          color: buttonBackgroundColor,
                           borderRadius: new BorderRadius.all(
                             Radius.circular(40.0),
                           ),
                         ),
                         child: CustomButton(
                           size: size,
-                          buttonBackground: buttonBackground,
+                          buttonBackground: buttonBackgroundColor,
                           buttonLabel: "CH",
-                          iconButton: null,
-                          textColor: text,
+                          iconColor: iconButtonColor,
+                          textColor: textColor,
                           upIcon: Icons.keyboard_arrow_up,
                           downIcon: Icons.keyboard_arrow_down,
                           upIconCallBack: () {
@@ -261,31 +240,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             print("Channel Down");
                           },
                         ),
-
-                        // Column(
-                        //     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        //     children: <Widget>[
-                        //       Icon(
-                        //         Icons.keyboard_arrow_up,
-                        //         color: iconButton,
-                        //         size: 38,
-                        //       ),
-                        //       Text(
-                        //         "Ch",
-                        //         style: TextStyle(
-                        //           fontWeight: FontWeight.bold,
-                        //           color: text,
-                        //           fontSize: 24,
-                        //         ),
-                        //       ),
-                        //       Icon(
-                        //         Icons.keyboard_arrow_down,
-                        //         color: iconButton,
-                        //         size: 38,
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                       )
                     ],
                   ),
@@ -298,7 +252,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: <Widget>[
                       Icon(
                         Icons.lens,
-                        color: icon,
+                        color: iconColor,
                         size: 8,
                       ),
                       Container(
@@ -306,7 +260,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       Icon(
                         Icons.lens,
-                        color: icon,
+                        color: iconColor,
                         size: 8,
                       ),
                       Container(
@@ -314,7 +268,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       Icon(
                         Icons.lens,
-                        color: icon,
+                        color: iconColor,
                         size: 8,
                       ),
                     ],
@@ -373,7 +327,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           width: size.width * 0.4,
                           height: size.width * 0.4,
                           decoration: new BoxDecoration(
-                            color: background,
+                            color: backgroundColor,
                             shape: BoxShape.circle,
                           ),
                           child: Draggable(
@@ -389,7 +343,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     color: (snapshot.data) > 0
                                         ? Color(0xFF59C533)
                                         : (snapshot.data) == 0
-                                            ? buttonBackground
+                                            ? buttonBackgroundColor
                                             : Color(0xFFFF4B4D),
                                     shape: BoxShape.circle,
                                   ),
@@ -401,7 +355,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               width: size.width * 0.4,
                               height: size.width * 0.4,
                               decoration: new BoxDecoration(
-                                color: buttonBackground,
+                                color: buttonBackgroundColor,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -472,7 +426,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             highlightColor: Colors.transparent,
                             child: Icon(
                               Icons.settings,
-                              color: icon,
+                              color: iconColor,
                             ),
                           ),
                         ],
@@ -489,12 +443,52 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+class CustomCircle extends StatelessWidget {
+  const CustomCircle({
+    Key key,
+    @required this.size,
+    @required this.background,
+  }) : super(key: key);
+
+  final Size size;
+  final Color background;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(2),
+      width: size.width * 0.1,
+      height: size.width * 0.1,
+      decoration: new BoxDecoration(
+        gradient: new LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [
+            Colors.blue,
+            Colors.pink,
+          ],
+        ),
+        shape: BoxShape.circle,
+      ),
+      child: Container(
+        padding: EdgeInsets.all(18),
+        width: size.width * 0.4,
+        height: size.width * 0.4,
+        decoration: new BoxDecoration(
+          color: background,
+          shape: BoxShape.circle,
+        ),
+      ),
+    );
+  }
+}
+
 class CustomButton extends StatelessWidget {
   const CustomButton(
       {Key key,
       @required this.size,
       @required this.buttonBackground,
-      @required this.iconButton,
+      @required this.iconColor,
       @required this.buttonLabel,
       @required this.textColor,
       @required this.upIcon,
@@ -505,7 +499,7 @@ class CustomButton extends StatelessWidget {
 
   final Size size;
   final Color buttonBackground;
-  final Color iconButton;
+  final Color iconColor;
   final Color textColor;
   final IconData upIcon;
   final IconData downIcon;
@@ -530,7 +524,7 @@ class CustomButton extends StatelessWidget {
             onTap: upIconCallBack,
             child: Icon(
               upIcon,
-              color: iconButton,
+              color: iconColor,
               size: 38,
             ),
           ),
@@ -546,7 +540,7 @@ class CustomButton extends StatelessWidget {
             onTap: downIconCallBack,
             child: Icon(
               downIcon,
-              color: iconButton,
+              color: iconColor,
               size: 38,
             ),
           ),
