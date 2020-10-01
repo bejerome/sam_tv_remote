@@ -12,9 +12,9 @@
     },
     {
       "name": "Flutter",
-      "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
+      "request": "launch",
+      "program": "lib/new_ui.dart"
     }
   ]
 }

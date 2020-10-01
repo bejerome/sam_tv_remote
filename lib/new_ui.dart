@@ -3,9 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'AppColors.dart';
+import 'app_colors.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   SystemChrome.setEnabledSystemUIOverlays([]);
@@ -83,7 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: <Widget>[
                         RichText(
                           text: TextSpan(
-                            text: 'Uni',
+                            text: 'Samsung',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: text,
@@ -91,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             children: <TextSpan>[
                               TextSpan(
-                                text: 'Controller',
+                                text: 'Remote',
                                 style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   color: text,
@@ -196,38 +197,20 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      Container(
-                        width: size.width * 0.20,
-                        height: size.height * 0.25,
-                        decoration: new BoxDecoration(
-                          color: buttonBackground,
-                          borderRadius: new BorderRadius.all(
-                            Radius.circular(40.0),
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Icon(
-                              Icons.add,
-                              color: iconButton,
-                              size: 38,
-                            ),
-                            Text(
-                              "Vol",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: text,
-                                fontSize: 24,
-                              ),
-                            ),
-                            Icon(
-                              Icons.remove,
-                              color: iconButton,
-                              size: 38,
-                            ),
-                          ],
-                        ),
+                      CustomButton(
+                        size: size,
+                        buttonBackground: buttonBackground,
+                        buttonLabel: "Vol",
+                        iconButton: iconButton,
+                        textColor: text,
+                        upIcon: Icons.add,
+                        upIconCallBack: () {
+                          print("Vol up");
+                        },
+                        downIcon: Icons.remove,
+                        downIconCallBack: () {
+                          print("Vol down");
+                        },
                       ),
                       Container(
                         padding: EdgeInsets.all(2),
@@ -263,30 +246,47 @@ class _MyHomePageState extends State<MyHomePage> {
                             Radius.circular(40.0),
                           ),
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: <Widget>[
-                            Icon(
-                              Icons.keyboard_arrow_up,
-                              color: iconButton,
-                              size: 38,
-                            ),
-                            Text(
-                              "Ch",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: text,
-                                fontSize: 24,
-                              ),
-                            ),
-                            Icon(
-                              Icons.keyboard_arrow_down,
-                              color: iconButton,
-                              size: 38,
-                            ),
-                          ],
+                        child: CustomButton(
+                          size: size,
+                          buttonBackground: buttonBackground,
+                          buttonLabel: "CH",
+                          iconButton: null,
+                          textColor: text,
+                          upIcon: Icons.keyboard_arrow_up,
+                          downIcon: Icons.keyboard_arrow_down,
+                          upIconCallBack: () {
+                            print("Channel Up");
+                          },
+                          downIconCallBack: () {
+                            print("Channel Down");
+                          },
                         ),
-                      ),
+
+                        // Column(
+                        //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        //     children: <Widget>[
+                        //       Icon(
+                        //         Icons.keyboard_arrow_up,
+                        //         color: iconButton,
+                        //         size: 38,
+                        //       ),
+                        //       Text(
+                        //         "Ch",
+                        //         style: TextStyle(
+                        //           fontWeight: FontWeight.bold,
+                        //           color: text,
+                        //           fontSize: 24,
+                        //         ),
+                        //       ),
+                        //       Icon(
+                        //         Icons.keyboard_arrow_down,
+                        //         color: iconButton,
+                        //         size: 38,
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                      )
                     ],
                   ),
                 ),
@@ -484,6 +484,73 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class CustomButton extends StatelessWidget {
+  const CustomButton(
+      {Key key,
+      @required this.size,
+      @required this.buttonBackground,
+      @required this.iconButton,
+      @required this.buttonLabel,
+      @required this.textColor,
+      @required this.upIcon,
+      @required this.downIcon,
+      @required this.upIconCallBack,
+      @required this.downIconCallBack})
+      : super(key: key);
+
+  final Size size;
+  final Color buttonBackground;
+  final Color iconButton;
+  final Color textColor;
+  final IconData upIcon;
+  final IconData downIcon;
+  final Function upIconCallBack;
+  final Function downIconCallBack;
+  final String buttonLabel;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: size.width * 0.20,
+      height: size.height * 0.25,
+      decoration: new BoxDecoration(
+        color: buttonBackground,
+        borderRadius: new BorderRadius.all(
+          Radius.circular(40.0),
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          GestureDetector(
+            onTap: upIconCallBack,
+            child: Icon(
+              upIcon,
+              color: iconButton,
+              size: 38,
+            ),
+          ),
+          Text(
+            buttonLabel,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: textColor,
+              fontSize: 24,
+            ),
+          ),
+          GestureDetector(
+            onTap: downIconCallBack,
+            child: Icon(
+              downIcon,
+              color: iconButton,
+              size: 38,
+            ),
+          ),
+        ],
       ),
     );
   }
