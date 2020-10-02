@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_samsung_remote/joypad.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'app_colors.dart';
@@ -55,6 +56,32 @@ class _MyHomePageState extends State<MyHomePage> {
         behavior: SnackBarBehavior.floating,
         duration: Duration(milliseconds: 500));
     Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  void toggleTheme() {
+    setState(
+      () {
+        backgroundColor = backgroundColor == AppColors.darkBackground
+            ? AppColors.lightBackground
+            : AppColors.darkBackground;
+        textColor = textColor == AppColors.darkText
+            ? AppColors.lightText
+            : AppColors.darkText;
+        selectColor = selectColor == AppColors.darkSelect
+            ? AppColors.lightSelect
+            : AppColors.darkSelect;
+        iconColor = iconColor == AppColors.darkIcon
+            ? AppColors.lightIcon
+            : AppColors.darkIcon;
+        iconButtonColor = iconButtonColor == AppColors.darkIconButton
+            ? AppColors.lightIconButton
+            : AppColors.darkIconButton;
+        buttonBackgroundColor =
+            buttonBackgroundColor == AppColors.darkButtonBackground
+                ? AppColors.lightButtonBackground
+                : AppColors.darkButtonBackground;
+      },
+    );
   }
 
   @override
@@ -124,48 +151,26 @@ class _MyHomePageState extends State<MyHomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      Container(
-                        width: size.height * 0.11,
-                        height: size.height * 0.08,
-                        child: Icon(
-                          Icons.volume_down,
-                          color: iconColor,
-                          size: 28,
+                      GestureDetector(
+                        onTap: () {
+                          print("Mute");
+                        },
+                        child: Container(
+                          width: size.height * 0.11,
+                          height: size.height * 0.08,
+                          child: Icon(
+                            Icons.volume_down,
+                            color: iconColor,
+                            size: 28,
+                          ),
                         ),
                       ),
-                      InkWell(
+                      GestureDetector(
                         onTap: () {
-                          setState(
-                            () {
-                              backgroundColor =
-                                  backgroundColor == AppColors.darkBackground
-                                      ? AppColors.lightBackground
-                                      : AppColors.darkBackground;
-                              textColor = textColor == AppColors.darkText
-                                  ? AppColors.lightText
-                                  : AppColors.darkText;
-                              selectColor = selectColor == AppColors.darkSelect
-                                  ? AppColors.lightSelect
-                                  : AppColors.darkSelect;
-                              iconColor = iconColor == AppColors.darkIcon
-                                  ? AppColors.lightIcon
-                                  : AppColors.darkIcon;
-                              iconButtonColor =
-                                  iconButtonColor == AppColors.darkIconButton
-                                      ? AppColors.lightIconButton
-                                      : AppColors.darkIconButton;
-                              buttonBackgroundColor = buttonBackgroundColor ==
-                                      AppColors.darkButtonBackground
-                                  ? AppColors.lightButtonBackground
-                                  : AppColors.darkButtonBackground;
-                            },
-                          );
                           print("Power Pressed");
                         },
-                        splashColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
                         child: Container(
-                          padding: EdgeInsets.all(2),
+                          padding: EdgeInsets.all(5),
                           width: size.height * 0.11,
                           height: size.height * 0.11,
                           decoration: new BoxDecoration(
@@ -179,13 +184,18 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                       ),
-                      Container(
-                        width: size.height * 0.11,
-                        height: size.height * 0.08,
-                        child: Icon(
-                          Icons.filter_list,
-                          color: iconColor,
-                          size: 28,
+                      GestureDetector(
+                        onTap: () {
+                          toggleTheme();
+                        },
+                        child: Container(
+                          width: size.height * 0.11,
+                          height: size.height * 0.08,
+                          child: Icon(
+                            Icons.filter_list,
+                            color: iconColor,
+                            size: 28,
+                          ),
                         ),
                       ),
                     ],
@@ -282,21 +292,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: <Widget>[
                       DragTarget(
                         builder: (context, list, list2) {
-                          return Container(
-                            padding: EdgeInsets.all(3),
-                            width: size.width * 0.2,
-                            height: size.width * 0.5,
-                            child: Icon(
-                              Icons.lens,
-                              color: Color(0xFFFF4B4D),
-                              size: 18,
-                            ),
-                          );
+                          return Nub(size: size);
                         },
                         onWillAccept: (item) {
                           debugPrint('<================');
                           this.willAcceptStream.add(-50);
-                          _fuctionDrag("<================");
                           return false;
                         },
                         onLeave: (item) {
@@ -331,7 +331,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             shape: BoxShape.circle,
                           ),
                           child: Draggable(
-                            axis: Axis.horizontal,
+                            axis: Axis.vertical,
                             feedback: StreamBuilder(
                               initialData: 0,
                               stream: willAcceptStream,
@@ -383,7 +383,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         onWillAccept: (item) {
                           debugPrint('================>');
                           this.willAcceptStream.add(50);
-                          _fuctionDrag("================>");
+                          // _fuctionDrag("================>");
                           return false;
                         },
                         onLeave: (item) {
@@ -393,6 +393,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ],
                   ),
+                ),
+                Joypad(
+                  onChange: null,
                 ),
                 Container(
                   width: size.width,
@@ -438,6 +441,29 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class Nub extends StatelessWidget {
+  const Nub({
+    Key key,
+    @required this.size,
+  }) : super(key: key);
+
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(3),
+      width: size.width * 0.2,
+      height: size.width * 0.5,
+      child: Icon(
+        Icons.lens,
+        color: Color(0xFFFF4B4D),
+        size: 18,
       ),
     );
   }
