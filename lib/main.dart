@@ -636,7 +636,7 @@ class ControllerButton extends StatelessWidget {
           decoration: BoxDecoration(
             // shape: BoxShape.circle,
             borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
-            gradient: const LinearGradient(
+            gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 colors: [Color(0XFF303030), Color(0XFF1a1a1a)]),
           ),
