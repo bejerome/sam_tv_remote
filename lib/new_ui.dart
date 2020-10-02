@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
-
+import 'package:vibration/vibration.dart';
 import 'app_colors.dart';
 
 void main() {
@@ -40,7 +40,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Color iconColor = AppColors.darkIcon;
   Color buttonBackgroundColor = AppColors.darkButtonBackground;
   Color iconButtonColor = AppColors.darkIconButton;
-
+  Color sliderBackground = AppColors.darkButtonBackground;
+  Future canVibrate;
   @override
   void initState() {
     willAcceptStream = new BehaviorSubject<int>();
@@ -72,6 +73,20 @@ class _MyHomePageState extends State<MyHomePage> {
                 : AppColors.darkButtonBackground;
       },
     );
+  }
+
+  Color colorSelect(data) {
+    Color color;
+    if (data == 0) {
+      color = buttonBackgroundColor;
+    } else {
+      color = Colors.blue;
+    }
+    return color;
+  }
+
+  void vibrate() {
+    Vibration.vibrate(duration: 5);
   }
 
   @override
@@ -142,6 +157,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () {
+                          vibrate();
                           print("Mute");
                         },
                         child: Container(
@@ -157,6 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       GestureDetector(
                         onTap: () {
                           print("Power Pressed");
+                          vibrate();
                         },
                         child: Container(
                           padding: EdgeInsets.all(5),
@@ -176,6 +193,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       GestureDetector(
                         onTap: () {
                           toggleTheme();
+                          vibrate();
                         },
                         child: Container(
                           width: size.height * 0.11,
@@ -205,10 +223,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         upIcon: Icons.add,
                         upIconCallBack: () {
                           print("Vol up");
+                          vibrate();
                         },
                         downIcon: Icons.remove,
                         downIconCallBack: () {
                           print("Vol down");
+                          vibrate();
                         },
                       ),
                       CustomCircle(
@@ -234,9 +254,11 @@ class _MyHomePageState extends State<MyHomePage> {
                           downIcon: Icons.keyboard_arrow_down,
                           upIconCallBack: () {
                             print("Channel Up");
+                            vibrate();
                           },
                           downIconCallBack: () {
                             print("Channel Down");
+                            vibrate();
                           },
                         ),
                       )
@@ -282,11 +304,11 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: <Widget>[
                       Positioned(
                         left: MediaQuery.of(context).size.width / 2.5,
-                        height: 0.0,
+                        height: 20.0,
                         child: DragTarget(
                           builder: (context, list, list2) {
                             return Container(
-                              padding: EdgeInsets.all(3),
+                              padding: EdgeInsets.only(bottom: 8),
                               width: size.width * 0.2,
                               height: size.width * 0.5,
                               child: Icon(
@@ -297,13 +319,19 @@ class _MyHomePageState extends State<MyHomePage> {
                             );
                           },
                           onWillAccept: (item) {
-                            debugPrint('^');
-                            this.willAcceptStream.add(50);
-                            // _fuctionDrag("================>");
+                            vibrate();
+                            this.willAcceptStream.add(-50);
+                            debugPrint('<================');
+                            setState(() {
+                              sliderBackground = Colors.purple;
+                            });
+
                             return false;
                           },
                           onLeave: (item) {
-                            debugPrint('RESET');
+                            vibrate();
+                            debugPrint('RESET Purple');
+                            sliderBackground = AppColors.darkButtonBackground;
                             this.willAcceptStream.add(0);
                           },
                         ),
@@ -316,12 +344,18 @@ class _MyHomePageState extends State<MyHomePage> {
                             return Nub(size: size);
                           },
                           onWillAccept: (item) {
-                            debugPrint('<================');
+                            vibrate();
                             this.willAcceptStream.add(-50);
+                            debugPrint('<================');
+                            sliderBackground = Colors.red;
+
                             return false;
                           },
                           onLeave: (item) {
-                            debugPrint('RESET');
+                            vibrate();
+                            setState(() {
+                              sliderBackground = AppColors.darkButtonBackground;
+                            });
                             this.willAcceptStream.add(0);
                           },
                         ),
@@ -330,7 +364,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         top: 30,
                         left: MediaQuery.of(context).size.width / 4,
                         child: Container(
-                          padding: EdgeInsets.all(10),
+                          padding: EdgeInsets.all(8),
                           width: size.width * 0.5,
                           height: size.width * 0.5,
                           decoration: BoxDecoration(
@@ -365,11 +399,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     width: size.width * 0.4,
                                     height: size.width * 0.4,
                                     decoration: new BoxDecoration(
-                                      color: (snapshot.data) > 0
-                                          ? Color(0xFF59C533)
-                                          : (snapshot.data) == 0
-                                              ? buttonBackgroundColor
-                                              : Color(0xFFFF4B4D),
+                                      color: sliderBackground,
                                       shape: BoxShape.circle,
                                     ),
                                   );
@@ -410,24 +440,28 @@ class _MyHomePageState extends State<MyHomePage> {
                             );
                           },
                           onWillAccept: (item) {
+                            vibrate();
                             debugPrint('================>');
                             this.willAcceptStream.add(50);
-                            // _fuctionDrag("================>");
+                            setState(() {
+                              sliderBackground = Color(0xFF59C533);
+                            });
+
                             return false;
                           },
                           onLeave: (item) {
                             debugPrint('RESET');
                             this.willAcceptStream.add(0);
+                            sliderBackground = buttonBackgroundColor;
                           },
                         ),
                       ),
                       Positioned(
-                        bottom: -90.0,
+                        bottom: -95.0,
                         left: size.width / 2.5,
                         child: DragTarget(
                           builder: (context, list, list2) {
                             return Container(
-                              padding: EdgeInsets.all(3),
                               width: size.width * 0.2,
                               height: size.width * 0.5,
                               child: Icon(
@@ -438,14 +472,19 @@ class _MyHomePageState extends State<MyHomePage> {
                             );
                           },
                           onWillAccept: (item) {
-                            debugPrint('V');
+                            vibrate();
+                            debugPrint('================>');
                             this.willAcceptStream.add(50);
-                            // _fuctionDrag("================>");
+                            setState(() {
+                              sliderBackground = Colors.yellow;
+                            });
+
                             return false;
                           },
                           onLeave: (item) {
                             debugPrint('RESET');
                             this.willAcceptStream.add(0);
+                            sliderBackground = buttonBackgroundColor;
                           },
                         ),
                       ),

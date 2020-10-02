@@ -21,6 +21,7 @@ dependencies:
     sdk: flutter
   rxdart: ^0.24.1
   http: ^0.12.0+4
+  vibration: ^1.6.1
 
   web_socket_channel:
     git: https://github.com/kecson/web_socket_channel
