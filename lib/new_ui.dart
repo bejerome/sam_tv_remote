@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:vibration/vibration.dart';
 import 'app_colors.dart';
+import 'device.dart';
+import 'key_codes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,6 +44,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Color iconButtonColor = AppColors.darkIconButton;
   Color sliderBackground = AppColors.darkButtonBackground;
   Future canVibrate;
+  SamsungSmartTV tv;
+  bool _keypadShown = false;
+
   @override
   void initState() {
     willAcceptStream = new BehaviorSubject<int>();
@@ -87,6 +92,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void vibrate() {
     Vibration.vibrate(duration: 5);
+  }
+
+  Future<void> connectTV() async {
+    try {
+      setState(() async {
+        tv = await SamsungSmartTV.discover();
+        await tv.connect();
+      });
+    } catch (e) {
+      print(e);
+    }
+    print("this is the token to save somewere ${tv.token}");
   }
 
   @override
@@ -139,10 +156,13 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: selectColor,
                           size: 28,
                         ),
-                        Icon(
-                          Icons.keyboard_arrow_down,
-                          color: selectColor,
-                          size: 28,
+                        GestureDetector(
+                          onTap: connectTV,
+                          child: Icon(
+                            Icons.keyboard_arrow_down,
+                            color: selectColor,
+                            size: 28,
+                          ),
                         ),
                       ],
                     ),
@@ -156,9 +176,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           vibrate();
                           print("Mute");
+                          await tv.sendKey(KEY_CODES.KEY_MUTE);
                         },
                         child: Container(
                           width: size.height * 0.11,
@@ -171,9 +192,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           print("Power Pressed");
                           vibrate();
+                          await tv.sendKey(KEY_CODES.KEY_POWER);
                         },
                         child: Container(
                           padding: EdgeInsets.all(5),
@@ -221,14 +243,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         iconColor: iconButtonColor,
                         textColor: textColor,
                         upIcon: Icons.add,
-                        upIconCallBack: () {
+                        upIconCallBack: () async {
                           print("Vol up");
                           vibrate();
+                          await tv.sendKey(KEY_CODES.KEY_VOLUP);
                         },
                         downIcon: Icons.remove,
-                        downIconCallBack: () {
+                        downIconCallBack: () async {
                           print("Vol down");
                           vibrate();
+                          await tv.sendKey(KEY_CODES.KEY_VOLDOWN);
                         },
                       ),
                       CustomCircle(
@@ -325,6 +349,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             setState(() {
                               sliderBackground = Colors.purple;
                             });
+                            tv.sendKey(KEY_CODES.KEY_UP);
 
                             return false;
                           },
@@ -348,7 +373,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             this.willAcceptStream.add(-50);
                             debugPrint('<================');
                             sliderBackground = Colors.red;
-
+                            tv.sendKey(KEY_CODES.KEY_LEFT);
                             return false;
                           },
                           onLeave: (item) {
@@ -446,7 +471,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             setState(() {
                               sliderBackground = Color(0xFF59C533);
                             });
-
+                            tv.sendKey(KEY_CODES.KEY_RIGHT);
                             return false;
                           },
                           onLeave: (item) {
@@ -478,7 +503,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             setState(() {
                               sliderBackground = Colors.yellow;
                             });
-
+                            tv.sendKey(KEY_CODES.KEY_DOWN);
                             return false;
                           },
                           onLeave: (item) {
