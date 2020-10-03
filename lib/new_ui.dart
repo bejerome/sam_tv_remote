@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +8,7 @@ import 'package:vibration/vibration.dart';
 import 'app_colors.dart';
 import 'device.dart';
 import 'key_codes.dart';
+import 'package:hardware_buttons/hardware_buttons.dart' as HardwareButtons;
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -45,13 +48,45 @@ class _MyHomePageState extends State<MyHomePage> {
   Color sliderBackground = AppColors.darkButtonBackground;
   Future canVibrate;
   SamsungSmartTV tv;
-  bool _keypadShown = false;
+  String _latestHardwareButtonEvent;
+  StreamSubscription<HardwareButtons.VolumeButtonEvent>
+      _volumeButtonSubscription;
 
   @override
   void initState() {
     willAcceptStream = new BehaviorSubject<int>();
     willAcceptStream.add(0);
+    _volumeButtonSubscription =
+        HardwareButtons.volumeButtonEvents.listen((event) {
+      setState(() {
+        _latestHardwareButtonEvent = event.toString();
+        volumeButtonActions(_latestHardwareButtonEvent);
+      });
+    });
     super.initState();
+  }
+
+  void volumeButtonActions(String status) async {
+    switch (status) {
+      case 'VolumeButtonEvent.VOLUME_DOWN':
+        {
+          await tv.sendKey(KEY_CODES.KEY_VOLDOWN);
+        }
+        break;
+
+      case 'VolumeButtonEvent.VOLUME_UP':
+        {
+          await tv.sendKey(KEY_CODES.KEY_VOLUP);
+        }
+        break;
+
+      default:
+        {
+          //statements;
+
+        }
+        break;
+    }
   }
 
   void toggleTheme() {
@@ -104,6 +139,12 @@ class _MyHomePageState extends State<MyHomePage> {
       print(e);
     }
     print("this is the token to save somewere ${tv.token}");
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _volumeButtonSubscription?.cancel();
   }
 
   @override
