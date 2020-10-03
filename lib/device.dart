@@ -56,7 +56,7 @@ class SamsungSmartTV {
     this.services.add(service);
   }
 
-  connect({appName = 'DartSamsungSmartTVDriver'}) async {
+  connect({appName = 'DartSamsungSmartTVDriver', String tokenValue}) async {
     var completer = new Completer();
 
     if (this.isConnected) {
@@ -77,6 +77,8 @@ class SamsungSmartTV {
         "${wsapi}channels/samsung.remote.control?name=$appNameBase64";
     if (token != null) {
       channel += '&token=$token';
+    } else {
+      channel += '&token=$tokenValue';
     }
 
     // log.info(`Connect to ${channel}`)
@@ -179,14 +181,14 @@ class SamsungSmartTV {
       try {
         final device = await client.getDevice();
 
-        Uri locaion = Uri.parse(client.location);
+        Uri location = Uri.parse(client.location);
 
-        final deviceExists =
-            tvs.firstWhere((tv) => tv.host == locaion.host, orElse: () => null);
+        final deviceExists = tvs.firstWhere((tv) => tv.host == location.host,
+            orElse: () => null);
 
         if (deviceExists == null) {
-          print("Found ${device.friendlyName} on IP ${locaion.host}");
-          final tv = SamsungSmartTV(host: locaion.host);
+          print("Found ${device.friendlyName} on IP ${location.host}");
+          final tv = SamsungSmartTV(host: location.host);
           tv.addService({
             "location": client.location,
             "server": client.server,

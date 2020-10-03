@@ -23,6 +23,8 @@ dependencies:
   http: ^0.12.0+4
   vibration: ^1.6.1
   hardware_buttons: ^1.0.0
+  hive: ^1.4.4
+  hive_flutter: ^0.3.1
 
   web_socket_channel:
     git: https://github.com/kecson/web_socket_channel

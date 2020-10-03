@@ -9,6 +9,9 @@ import 'app_colors.dart';
 import 'device.dart';
 import 'key_codes.dart';
 import 'package:hardware_buttons/hardware_buttons.dart' as HardwareButtons;
+import 'package:hive/hive.dart';
+import 'dart:typed_data';
+import 'package:hive_flutter/hive_flutter.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -51,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String _latestHardwareButtonEvent;
   StreamSubscription<HardwareButtons.VolumeButtonEvent>
       _volumeButtonSubscription;
+  String token;
 
   @override
   void initState() {
@@ -63,7 +67,46 @@ class _MyHomePageState extends State<MyHomePage> {
         volumeButtonActions(_latestHardwareButtonEvent);
       });
     });
+    connectTV();
     super.initState();
+  }
+
+  Future<void> storeToken() async {
+    await Hive.initFlutter();
+    var keyBox = await Hive.openBox('encryptionKeyBox');
+    if (!keyBox.containsKey('key')) {
+      var key = Hive.generateSecureKey();
+      keyBox.put('key', key);
+    }
+    var key = keyBox.get('key') as Uint8List;
+    var encryptedBox = await Hive.openBox('vaultBox', encryptionKey: key);
+    if (encryptedBox.get('secret') == null) {
+      token = await getTvToken();
+      encryptedBox.put('secret', token);
+      print(encryptedBox.get('secret'));
+    } else {
+      token = encryptedBox.get('secret');
+      await getTvToken();
+    }
+  }
+
+  void connectTV() async {
+    try {
+      await storeToken();
+      // await tv.connect(tokenValue: token);
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<String> getTvToken() async {
+    try {
+      tv = await SamsungSmartTV.discover();
+      await tv.connect(tokenValue: token);
+    } catch (e) {
+      print(e);
+    }
+    return tv.token;
   }
 
   void volumeButtonActions(String status) async {
@@ -127,18 +170,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void vibrate() {
     Vibration.vibrate(duration: 5);
-  }
-
-  Future<void> connectTV() async {
-    try {
-      setState(() async {
-        tv = await SamsungSmartTV.discover();
-        await tv.connect();
-      });
-    } catch (e) {
-      print(e);
-    }
-    print("this is the token to save somewere ${tv.token}");
   }
 
   @override
@@ -296,9 +327,14 @@ class _MyHomePageState extends State<MyHomePage> {
                           await tv.sendKey(KEY_CODES.KEY_VOLDOWN);
                         },
                       ),
-                      CustomCircle(
-                        size: size,
-                        background: backgroundColor,
+                      GestureDetector(
+                        onTap: () async {
+                          await tv.sendKey(KEY_CODES.KEY_ENTER);
+                        },
+                        child: CustomCircle(
+                          size: size,
+                          background: backgroundColor,
+                        ),
                       ),
                       Container(
                         width: size.width * 0.20,
@@ -331,31 +367,27 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 Container(
+                  // color: Colors.blue,
                   width: size.width,
                   height: size.height * 0.10,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      Icon(
-                        Icons.lens,
-                        color: iconColor,
-                        size: 8,
-                      ),
-                      Container(
-                        width: 8,
-                      ),
-                      Icon(
-                        Icons.lens,
-                        color: iconColor,
-                        size: 8,
-                      ),
-                      Container(
-                        width: 8,
-                      ),
-                      Icon(
-                        Icons.lens,
-                        color: iconColor,
-                        size: 8,
+                      GestureDetector(
+                        onTap: () async {
+                          await tv.sendKey(KEY_CODES.KEY_BACK_MHP);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.only(
+                            top: 20,
+                            left: 50,
+                          ),
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: iconColor,
+                            size: 38,
+                          ),
+                        ),
                       ),
                     ],
                   ),
