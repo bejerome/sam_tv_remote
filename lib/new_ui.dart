@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_samsung_remote/tv_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:vibration/vibration.dart';
 import 'app_colors.dart';
@@ -18,7 +20,16 @@ void main() {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   SystemChrome.setEnabledSystemUIOverlays([]);
-  return runApp(UniversalControllerApp());
+  return runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => TvProvider(),
+        )
+      ],
+      child: UniversalControllerApp(),
+    ),
+  );
 }
 
 class UniversalControllerApp extends StatelessWidget {
@@ -55,6 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
   StreamSubscription<HardwareButtons.VolumeButtonEvent>
       _volumeButtonSubscription;
   String token;
+  bool status = false;
 
   @override
   void initState() {
@@ -93,10 +105,24 @@ class _MyHomePageState extends State<MyHomePage> {
   void connectTV() async {
     try {
       await storeToken();
+      status = tv.isConnected;
+      setColor(status);
       // await tv.connect(tokenValue: token);
     } catch (e) {
       print(e);
     }
+  }
+
+  setColor(status) {
+    Color result;
+    if (status) {
+      result = Colors.green;
+    } else {
+      result = Colors.white;
+    }
+    setState(() {
+      selectColor = result;
+    });
   }
 
   Future<String> getTvToken() async {
@@ -158,16 +184,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Color colorSelect(data) {
-    Color color;
-    if (data == 0) {
-      color = buttonBackgroundColor;
-    } else {
-      color = Colors.blue;
-    }
-    return color;
-  }
-
   void vibrate() {
     Vibration.vibrate(duration: 5);
   }
@@ -180,6 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Color color = context.watch<TvProvider>().colorStatus;
     var size = MediaQuery.of(context).size;
     return SafeArea(
       child: Container(
@@ -202,26 +219,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        RichText(
-                          text: TextSpan(
-                            text: 'Samsung',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: textColor,
-                              fontSize: 20,
-                            ),
-                            children: <TextSpan>[
-                              TextSpan(
-                                text: 'Remote',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.normal,
-                                  color: textColor,
-                                  fontSize: 20,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
                         Spacer(),
                         Icon(
                           Icons.personal_video,
@@ -375,7 +372,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     children: <Widget>[
                       GestureDetector(
                         onTap: () async {
-                          await tv.sendKey(KEY_CODES.KEY_BACK_MHP);
+                          vibrate();
+                          await tv.sendKey(KEY_CODES.KEY_RETURN);
                         },
                         child: Container(
                           padding: EdgeInsets.only(
@@ -384,6 +382,23 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           child: Icon(
                             Icons.arrow_back,
+                            color: iconColor,
+                            size: 38,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () async {
+                          vibrate();
+                          await tv.sendKey(KEY_CODES.KEY_HOME);
+                        },
+                        child: Container(
+                          padding: EdgeInsets.only(
+                            top: 20,
+                            left: MediaQuery.of(context).size.width / 1.8,
+                          ),
+                          child: Icon(
+                            Icons.home,
                             color: iconColor,
                             size: 38,
                           ),

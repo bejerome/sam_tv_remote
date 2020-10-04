@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_samsung_remote/tv_provider.dart';
+import 'package:provider/provider.dart';
 
 import 'device.dart';
 import 'key_codes.dart';
@@ -10,7 +12,13 @@ void main() {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   SystemChrome.setEnabledSystemUIOverlays([]);
-  return runApp(SamgungRemoteController());
+
+  return runApp(
+    Provider(
+      create: (_) => TvProvider(),
+      child: SamgungRemoteController(),
+    ),
+  );
 }
 
 class SamgungRemoteController extends StatelessWidget {
