@@ -364,122 +364,49 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 Container(
-                  // color: Colors.blue,
-                  width: size.width,
-                  height: size.height * 0.10,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () async {
-                          vibrate();
-                          await tv.sendKey(KEY_CODES.KEY_RETURN);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.only(
-                            top: 20,
-                            left: 50,
-                          ),
-                          child: Icon(
-                            Icons.arrow_back,
-                            color: iconColor,
-                            size: 38,
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          vibrate();
-                          await tv.sendKey(KEY_CODES.KEY_HOME);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.only(
-                            top: 20,
-                            left: MediaQuery.of(context).size.width / 1.8,
-                          ),
-                          child: Icon(
-                            Icons.home,
-                            color: iconColor,
-                            size: 38,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  alignment: Alignment.center,
+                  margin: EdgeInsets.only(top: 20),
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 3,
-                  // alignment: Alignment.topCenter,
+                  height: MediaQuery.of(context).size.height / 2.5,
                   child: Stack(
                     children: <Widget>[
                       Positioned(
-                        left: MediaQuery.of(context).size.width / 2.5,
-                        height: 20.0,
-                        child: DragTarget(
-                          builder: (context, list, list2) {
-                            return Container(
-                              padding: EdgeInsets.only(bottom: 8),
-                              width: size.width * 0.2,
-                              height: size.width * 0.5,
-                              child: Icon(
-                                Icons.lens,
-                                color: Colors.purple,
-                                size: 18,
-                              ),
-                            );
-                          },
-                          onWillAccept: (item) {
+                        left: size.width / 2.6,
+                        top: -20,
+                        child: GestureDetector(
+                          onTap: () async {
                             vibrate();
-                            this.willAcceptStream.add(-50);
-                            debugPrint('<================');
-                            setState(() {
-                              sliderBackground = Colors.purple;
-                            });
-                            tv.sendKey(KEY_CODES.KEY_UP);
-
-                            return false;
+                            await tv.sendKey(KEY_CODES.KEY_UP);
                           },
-                          onLeave: (item) {
-                            vibrate();
-                            debugPrint('RESET Purple');
-                            sliderBackground = AppColors.darkButtonBackground;
-                            this.willAcceptStream.add(0);
-                          },
+                          child: Icon(
+                            Icons.arrow_drop_up,
+                            color: Colors.purple,
+                            size: 100,
+                          ),
                         ),
                       ),
                       Positioned(
-                        top: 30,
-                        left: 10,
-                        child: DragTarget(
-                          builder: (context, list, list2) {
-                            return Nub(size: size);
-                          },
-                          onWillAccept: (item) {
+                        top: size.height / 8,
+                        left: 20,
+                        child: GestureDetector(
+                          onTap: () async {
                             vibrate();
-                            this.willAcceptStream.add(-50);
-                            debugPrint('<================');
-                            sliderBackground = Colors.red;
-                            tv.sendKey(KEY_CODES.KEY_LEFT);
-                            return false;
+                            await tv.sendKey(KEY_CODES.KEY_LEFT);
+                            ;
                           },
-                          onLeave: (item) {
-                            vibrate();
-                            setState(() {
-                              sliderBackground = AppColors.darkButtonBackground;
-                            });
-                            this.willAcceptStream.add(0);
-                          },
+                          child: Icon(
+                            Icons.arrow_left,
+                            color: Colors.red,
+                            size: 100,
+                          ),
                         ),
                       ),
                       Positioned(
-                        top: 30,
-                        left: MediaQuery.of(context).size.width / 4,
+                        top: 80,
+                        left: MediaQuery.of(context).size.width / 3.3,
                         child: Container(
-                          padding: EdgeInsets.all(8),
-                          width: size.width * 0.5,
-                          height: size.width * 0.5,
+                          padding: EdgeInsets.all(1),
+                          width: size.width * 0.4,
+                          height: size.width * 0.4,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
@@ -495,110 +422,56 @@ class _MyHomePageState extends State<MyHomePage> {
                             shape: BoxShape.circle,
                           ),
                           child: Container(
-                            padding: EdgeInsets.all(18),
-                            width: size.width * 0.4,
-                            height: size.width * 0.4,
                             decoration: new BoxDecoration(
                               color: backgroundColor,
                               shape: BoxShape.circle,
-                            ),
-                            child: Draggable(
-                              axis: null,
-                              feedback: StreamBuilder(
-                                initialData: 0,
-                                stream: willAcceptStream,
-                                builder: (context, snapshot) {
-                                  return Container(
-                                    width: size.width * 0.4,
-                                    height: size.width * 0.4,
-                                    decoration: new BoxDecoration(
-                                      color: sliderBackground,
-                                      shape: BoxShape.circle,
-                                    ),
-                                  );
-                                },
-                              ),
-                              childWhenDragging: Container(),
-                              child: Container(
-                                width: size.width * 0.5,
-                                height: size.width * 0.5,
-                                decoration: new BoxDecoration(
-                                  color: buttonBackgroundColor,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              onDraggableCanceled: (v, f) => setState(
-                                () {
-                                  this.willAcceptStream.add(0);
-                                },
-                              ),
                             ),
                           ),
                         ),
                       ),
                       Positioned(
-                        top: 30,
-                        right: 0.0,
-                        child: DragTarget(
-                          builder: (context, list, list2) {
-                            return Container(
-                              padding: EdgeInsets.all(3),
-                              width: size.width * 0.2,
-                              height: size.width * 0.5,
-                              child: Icon(
-                                Icons.lens,
-                                color: Color(0xFF59C533),
-                                size: 18,
-                              ),
-                            );
-                          },
-                          onWillAccept: (item) {
+                        top: size.height / 8,
+                        right: 20.0,
+                        child: GestureDetector(
+                          onTap: () async {
                             vibrate();
-                            debugPrint('================>');
-                            this.willAcceptStream.add(50);
-                            setState(() {
-                              sliderBackground = Color(0xFF59C533);
-                            });
-                            tv.sendKey(KEY_CODES.KEY_RIGHT);
-                            return false;
+                            await tv.sendKey(KEY_CODES.KEY_RIGHT);
                           },
-                          onLeave: (item) {
-                            debugPrint('RESET');
-                            this.willAcceptStream.add(0);
-                            sliderBackground = buttonBackgroundColor;
-                          },
+                          child: Icon(
+                            Icons.arrow_right,
+                            color: Color(0xFF59C533),
+                            size: 100,
+                          ),
                         ),
                       ),
                       Positioned(
-                        bottom: -95.0,
-                        left: size.width / 2.5,
-                        child: DragTarget(
-                          builder: (context, list, list2) {
-                            return Container(
-                              width: size.width * 0.2,
-                              height: size.width * 0.5,
-                              child: Icon(
-                                Icons.lens,
-                                color: Colors.yellow,
-                                size: 18,
-                              ),
-                            );
-                          },
-                          onWillAccept: (item) {
+                        top: size.height / 7.5,
+                        left: size.width / 2.6,
+                        child: GestureDetector(
+                          onTap: () async {
                             vibrate();
-                            debugPrint('================>');
-                            this.willAcceptStream.add(50);
-                            setState(() {
-                              sliderBackground = Colors.yellow;
-                            });
-                            tv.sendKey(KEY_CODES.KEY_DOWN);
-                            return false;
+                            await tv.sendKey(KEY_CODES.KEY_ENTER);
                           },
-                          onLeave: (item) {
-                            debugPrint('RESET');
-                            this.willAcceptStream.add(0);
-                            sliderBackground = buttonBackgroundColor;
+                          child: Icon(
+                            Icons.adjust,
+                            color: Color(0xFF584BD2),
+                            size: 100,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: (size.height / 10) - 95,
+                        left: size.width / 2.6,
+                        child: GestureDetector(
+                          onTap: () async {
+                            vibrate();
+                            await tv.sendKey(KEY_CODES.KEY_DOWN);
                           },
+                          child: Icon(
+                            Icons.arrow_drop_down,
+                            color: Colors.yellow,
+                            size: 100,
+                          ),
                         ),
                       ),
                     ],
@@ -606,34 +479,44 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 Container(
                   width: size.width,
-                  height: size.height * 0.20,
+                  height: size.height * 0.10,
+                  margin: EdgeInsets.all(40),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Icon(
-                        Icons.adjust,
-                        color: Color(0xFF584BD2),
-                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
-                          InkWell(
-                            onTap: () {
-                              print("Start Pressed");
+                          GestureDetector(
+                            onTap: () async {
+                              vibrate();
+                              await tv.sendKey(KEY_CODES.KEY_RETURN);
                             },
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
-                            child: Icon(
-                              Icons.rss_feed,
-                              color: Color(0xFF584BD2),
+                            child: Container(
+                              child: Icon(
+                                Icons.arrow_back,
+                                color: iconColor,
+                                size: 38,
+                              ),
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              print("Settings Pressed");
+                          GestureDetector(
+                            onTap: () async {
+                              vibrate();
+                              await tv.sendKey(KEY_CODES.KEY_HOME);
                             },
-                            splashColor: Colors.transparent,
-                            highlightColor: Colors.transparent,
+                            child: Container(
+                              child: Icon(
+                                Icons.home,
+                                color: iconColor,
+                                size: 38,
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              await tv.sendKey(KEY_CODES.KEY_MENU);
+                            },
                             child: Icon(
                               Icons.settings,
                               color: iconColor,
