@@ -160,6 +160,32 @@ class SamsungSmartTV {
     return Future.delayed(Duration(milliseconds: kKeyDelay));
   }
 
+  newSendKey(String key) async {
+    if (!isConnected) {
+      throw ('Not connected to device. Call `tv.connect()` first!');
+    }
+
+    print("Send key command  ${key.toString().split('.').last}");
+    final data = json.encode({
+      "method": 'ms.remote.control',
+      "params": {
+        "Cmd": 'Click',
+        "DataOfCmd": key.toString(),
+        "Option": false,
+        "TypeOfRemote": 'SendRemoteKey',
+      }
+    });
+
+    ws.sink.add(data);
+
+    // add a delay so TV has time to execute
+    Timer(Duration(seconds: kConnectionTimeout), () {
+      throw ('Unable to connect to TV: timeout');
+    });
+
+    return Future.delayed(Duration(milliseconds: kKeyDelay));
+  }
+
   //static method to discover Samsung Smart TVs in the network using the UPNP protocol
 
   static discover() async {

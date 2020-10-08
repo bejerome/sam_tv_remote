@@ -15,6 +15,7 @@ import 'package:hardware_buttons/hardware_buttons.dart' as HardwareButtons;
 import 'package:hive/hive.dart';
 import 'dart:typed_data';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:virtual_keyboard/virtual_keyboard.dart';
 
 SamsungSmartTV tv;
 void main() {
@@ -236,341 +237,374 @@ class _MyHomePageState extends State<MyHomePage> {
     // Color color = context.watch<TvProvider>().colorStatus;
     var size = MediaQuery.of(context).size;
     return SafeArea(
-      child: Container(
-        width: size.width,
-        height: size.height,
-        color: backgroundColor,
-        child: FittedBox(
-          fit: BoxFit.contain,
-          alignment: Alignment.center,
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                Container(
-                  width: size.width,
-                  height: size.height * 0.1,
-                  child: Padding(
-                    padding: EdgeInsets.all(20.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Spacer(),
-                        Icon(
-                          Icons.personal_video,
-                          color: selectColor,
-                          size: 28,
-                        ),
-                        GestureDetector(
-                          onTap: connectTV,
-                          child: Icon(
-                            Icons.keyboard_arrow_down,
-                            color: selectColor,
-                            size: 28,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  width: size.width,
-                  height: size.height * 0.11,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: () async {
-                          vibrate();
-                          print("Mute");
-                          await tv.sendKey(KEY_CODES.KEY_MUTE);
-                        },
-                        child: Container(
-                          width: size.height * 0.11,
-                          height: size.height * 0.08,
-                          child: Icon(
-                            Icons.volume_down,
-                            color: iconColor,
-                            size: 28,
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          print("Power Pressed");
-                          vibrate();
-                          await tv.sendKey(KEY_CODES.KEY_POWER);
-                        },
-                        child: Container(
-                          padding: EdgeInsets.all(5),
-                          width: size.height * 0.11,
-                          height: size.height * 0.11,
-                          decoration: new BoxDecoration(
-                            color: buttonBackgroundColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            Icons.power_settings_new,
-                            color: Color(0xFFEF5252),
-                            size: 38,
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          toggleTheme();
-                          vibrate();
-                        },
-                        child: Container(
-                          width: size.height * 0.11,
-                          height: size.height * 0.08,
-                          child: Icon(
-                            Icons.filter_list,
-                            color: iconColor,
-                            size: 28,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: size.width,
-                  height: size.height * 0.25,
-                  child: Row(
+        child: Container(
+            width: size.width,
+            height: size.height,
+            color: backgroundColor,
+            child: FittedBox(
+              fit: BoxFit.contain,
+              alignment: Alignment.center,
+              child: Center(
+                child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
-                      CustomButton(
-                        size: size,
-                        buttonBackground: buttonBackgroundColor,
-                        buttonLabel: "Vol",
-                        iconColor: iconButtonColor,
-                        textColor: textColor,
-                        upIcon: Icons.add,
-                        upIconCallBack: () async {
-                          print("Vol up");
-                          vibrate();
-                          await tv.sendKey(KEY_CODES.KEY_VOLUP);
-                        },
-                        downIcon: Icons.remove,
-                        downIconCallBack: () async {
-                          print("Vol down");
-                          vibrate();
-                          await tv.sendKey(KEY_CODES.KEY_VOLDOWN);
-                        },
-                      ),
-                      GestureDetector(
-                        onTap: () async {
-                          await tv.sendKey(KEY_CODES.KEY_ENTER);
-                        },
-                        child: CustomCircle(
-                          size: size,
-                          background: backgroundColor,
+                      Container(
+                        width: size.width,
+                        height: size.height * 0.1,
+                        child: Padding(
+                          padding: EdgeInsets.all(20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Spacer(),
+                              Icon(
+                                Icons.personal_video,
+                                color: selectColor,
+                                size: 28,
+                              ),
+                              GestureDetector(
+                                onTap: connectTV,
+                                child: Icon(
+                                  Icons.keyboard_arrow_down,
+                                  color: selectColor,
+                                  size: 28,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       Container(
-                        width: size.width * 0.20,
+                        width: size.width,
+                        height: size.height * 0.11,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            GestureDetector(
+                              onTap: () async {
+                                vibrate();
+                                print("Mute");
+                                await tv.sendKey(KEY_CODES.KEY_MUTE);
+                              },
+                              child: Container(
+                                width: size.height * 0.11,
+                                height: size.height * 0.08,
+                                child: Icon(
+                                  Icons.volume_down,
+                                  color: iconColor,
+                                  size: 28,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () async {
+                                print("Power Pressed");
+                                vibrate();
+                                await tv.sendKey(KEY_CODES.KEY_POWER);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(5),
+                                width: size.height * 0.11,
+                                height: size.height * 0.11,
+                                decoration: new BoxDecoration(
+                                  color: buttonBackgroundColor,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  Icons.power_settings_new,
+                                  color: Color(0xFFEF5252),
+                                  size: 38,
+                                ),
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                toggleTheme();
+                                vibrate();
+                              },
+                              child: Container(
+                                width: size.height * 0.11,
+                                height: size.height * 0.08,
+                                child: Icon(
+                                  Icons.filter_list,
+                                  color: iconColor,
+                                  size: 28,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: size.width,
                         height: size.height * 0.25,
-                        decoration: new BoxDecoration(
-                          color: buttonBackgroundColor,
-                          borderRadius: new BorderRadius.all(
-                            Radius.circular(40.0),
-                          ),
-                        ),
-                        child: CustomButton(
-                          size: size,
-                          buttonBackground: buttonBackgroundColor,
-                          buttonLabel: "CH",
-                          iconColor: iconButtonColor,
-                          textColor: textColor,
-                          upIcon: Icons.keyboard_arrow_up,
-                          downIcon: Icons.keyboard_arrow_down,
-                          upIconCallBack: () {
-                            print("Channel Up");
-                            vibrate();
-                          },
-                          downIconCallBack: () {
-                            print("Channel Down");
-                            vibrate();
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 20),
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 2.5,
-                  child: Stack(
-                    children: <Widget>[
-                      Positioned(
-                        left: size.width / 2.6,
-                        top: -20,
-                        child: GestureDetector(
-                          onTap: () async {
-                            vibrate();
-                            await tv.sendKey(KEY_CODES.KEY_UP);
-                          },
-                          child: Icon(
-                            Icons.arrow_drop_up,
-                            color: Color(0xFF584BD2),
-                            size: 100,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: size.height / 8,
-                        left: 20,
-                        child: GestureDetector(
-                          onTap: () async {
-                            vibrate();
-                            await tv.sendKey(KEY_CODES.KEY_LEFT);
-                            ;
-                          },
-                          child: Icon(
-                            Icons.arrow_left,
-                            color: Color(0xFF584BD2),
-                            size: 100,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: 80,
-                        left: MediaQuery.of(context).size.width / 3.3,
-                        child: Container(
-                          padding: EdgeInsets.all(1),
-                          width: size.width * 0.4,
-                          height: size.width * 0.4,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Colors.transparent,
-                                Colors.transparent,
-                                Colors.pinkAccent,
-                                Colors.blue,
-                                Color(0xFF584BD2)
-                              ],
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            CustomButton(
+                              size: size,
+                              buttonBackground: buttonBackgroundColor,
+                              buttonLabel: "Vol",
+                              iconColor: iconButtonColor,
+                              textColor: textColor,
+                              upIcon: Icons.add,
+                              upIconCallBack: () async {
+                                print("Vol up");
+                                vibrate();
+                                await tv.sendKey(KEY_CODES.KEY_VOLUP);
+                              },
+                              downIcon: Icons.remove,
+                              downIconCallBack: () async {
+                                print("Vol down");
+                                vibrate();
+                                await tv.sendKey(KEY_CODES.KEY_VOLDOWN);
+                              },
                             ),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Container(
-                            decoration: new BoxDecoration(
-                              color: backgroundColor,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: size.height / 8,
-                        right: 20.0,
-                        child: GestureDetector(
-                          onTap: () async {
-                            vibrate();
-                            await tv.sendKey(KEY_CODES.KEY_RIGHT);
-                          },
-                          child: Icon(
-                            Icons.arrow_right,
-                            color: Color(0xFF584BD2),
-                            size: 100,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: size.height / 7.5,
-                        left: size.width / 2.6,
-                        child: GestureDetector(
-                          onTap: () async {
-                            vibrate();
-                            await tv.sendKey(KEY_CODES.KEY_ENTER);
-                          },
-                          child: Icon(
-                            Icons.adjust,
-                            color: Color(0xFF584BD2),
-                            size: 100,
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        bottom: (size.height / 10) - 95,
-                        left: size.width / 2.6,
-                        child: GestureDetector(
-                          onTap: () async {
-                            vibrate();
-                            await tv.sendKey(KEY_CODES.KEY_DOWN);
-                          },
-                          child: Icon(
-                            Icons.arrow_drop_down,
-                            color: Color(0xFF584BD2),
-                            size: 100,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: size.width,
-                  height: size.height * 0.10,
-                  margin: EdgeInsets.all(40),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () async {
-                              vibrate();
-                              await tv.sendKey(KEY_CODES.KEY_RETURN);
-                            },
-                            child: Container(
-                              child: Icon(
-                                Icons.arrow_back,
-                                color: iconColor,
-                                size: 28,
+                            GestureDetector(
+                              onTap: () async {
+                                await tv.sendKey(KEY_CODES.KEY_ENTER);
+                              },
+                              child: CustomCircle(
+                                size: size,
+                                background: backgroundColor,
                               ),
                             ),
-                          ),
-                          GestureDetector(
-                            onTap: () async {
-                              vibrate();
-                              await tv.sendKey(KEY_CODES.KEY_HOME);
-                            },
-                            child: Container(
-                              child: Icon(
-                                Icons.home,
-                                color: iconColor,
-                                size: 38,
+                            Container(
+                              width: size.width * 0.20,
+                              height: size.height * 0.25,
+                              decoration: new BoxDecoration(
+                                color: buttonBackgroundColor,
+                                borderRadius: new BorderRadius.all(
+                                  Radius.circular(40.0),
+                                ),
+                              ),
+                              child: CustomButton(
+                                size: size,
+                                buttonBackground: buttonBackgroundColor,
+                                buttonLabel: "CH",
+                                iconColor: iconButtonColor,
+                                textColor: textColor,
+                                upIcon: Icons.keyboard_arrow_up,
+                                downIcon: Icons.keyboard_arrow_down,
+                                upIconCallBack: () {
+                                  print("Channel Up");
+                                  vibrate();
+                                },
+                                downIconCallBack: () {
+                                  print("Channel Down");
+                                  vibrate();
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 20),
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.height / 2.5,
+                        child: Stack(
+                          children: <Widget>[
+                            Positioned(
+                              left: size.width / 2.6,
+                              top: -20,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  vibrate();
+                                  await tv.sendKey(KEY_CODES.KEY_UP);
+                                },
+                                child: Icon(
+                                  Icons.arrow_drop_up,
+                                  color: Color(0xFF584BD2),
+                                  size: 100,
+                                ),
                               ),
                             ),
-                          ),
-                          GestureDetector(
-                            onTap: () async {
-                              await tv.sendKey(KEY_CODES.KEY_MENU);
-                            },
-                            child: Icon(
-                              Icons.settings,
-                              color: iconColor,
-                              size: 28,
+                            Positioned(
+                              top: size.height / 8,
+                              left: 20,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  vibrate();
+                                  await tv.sendKey(KEY_CODES.KEY_LEFT);
+                                },
+                                child: Icon(
+                                  Icons.arrow_left,
+                                  color: Color(0xFF584BD2),
+                                  size: 100,
+                                ),
+                              ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              top: 80,
+                              left: MediaQuery.of(context).size.width / 3.3,
+                              child: Container(
+                                padding: EdgeInsets.all(1),
+                                width: size.width * 0.4,
+                                height: size.width * 0.4,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.transparent,
+                                      Colors.pinkAccent,
+                                      Colors.blue,
+                                      Color(0xFF584BD2)
+                                    ],
+                                  ),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Container(
+                                  decoration: new BoxDecoration(
+                                    color: backgroundColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: size.height / 8,
+                              right: 20.0,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  vibrate();
+                                  await tv.sendKey(KEY_CODES.KEY_RIGHT);
+                                },
+                                child: Icon(
+                                  Icons.arrow_right,
+                                  color: Color(0xFF584BD2),
+                                  size: 100,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              top: size.height / 7.5,
+                              left: size.width / 2.6,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  vibrate();
+                                  await tv.sendKey(KEY_CODES.KEY_ENTER);
+                                },
+                                child: Icon(
+                                  Icons.adjust,
+                                  color: Color(0xFF584BD2),
+                                  size: 100,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: (size.height / 10) - 95,
+                              left: size.width / 2.6,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  vibrate();
+                                  await tv.sendKey(KEY_CODES.KEY_DOWN);
+                                },
+                                child: Icon(
+                                  Icons.arrow_drop_down,
+                                  color: Color(0xFF584BD2),
+                                  size: 100,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+                      Container(
+                        width: size.width,
+                        height: size.height * 0.10,
+                        margin: EdgeInsets.all(40),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: () async {
+                                      vibrate();
+                                      await tv.sendKey(KEY_CODES.KEY_RETURN);
+                                    },
+                                    child: Container(
+                                      child: Icon(
+                                        Icons.arrow_back,
+                                        color: iconColor,
+                                        size: 28,
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      vibrate();
+                                      await tv.sendKey(KEY_CODES.KEY_HOME);
+                                    },
+                                    child: Container(
+                                      child: Icon(
+                                        Icons.home,
+                                        color: iconColor,
+                                        size: 38,
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      print("home");
+                                      await tv.sendKey(KEY_CODES.KEY_MENU);
+                                    },
+                                    child: Icon(
+                                      Icons.settings,
+                                      color: iconColor,
+                                      size: 28,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      showModalBottomSheet<void>(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return Container(
+                                                height: 400,
+                                                color: Colors.amber,
+                                                child: Center(
+                                                    child: Container(
+                                                  // Keyboard is transparent
+                                                  color: Colors.teal,
+                                                  child: VirtualKeyboard(
+                                                      // Default height is 300
+                                                      height: 400,
+                                                      // Default is black
+                                                      textColor: Colors.white,
+                                                      // Default 14
+                                                      fontSize: 20,
+                                                      // [A-Z, 0-9]
+                                                      type: VirtualKeyboardType
+                                                          .Numeric,
+                                                      // Callback for key press event
+                                                      onKeyPress: (key) async {
+                                                        await tv.newSendKey(
+                                                            "KEY_" + key.text);
+                                                      }),
+                                                )));
+                                          });
+                                    },
+                                    child: Icon(
+                                      Icons.keyboard,
+                                      color: iconColor,
+                                      size: 28,
+                                    ),
+                                  ),
+                                ]),
+                          ],
+                        ),
+                      ),
+                    ]),
+              ),
+            )));
   }
 }
 
