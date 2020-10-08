@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +16,7 @@ import 'package:hive/hive.dart';
 import 'dart:typed_data';
 import 'package:hive_flutter/hive_flutter.dart';
 
+SamsungSmartTV tv;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
@@ -36,12 +38,47 @@ class UniversalControllerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Universal Controller',
-      home: Scaffold(
-        body: MyHomePage(),
-      ),
-    );
+        debugShowCheckedModeBanner: false,
+        title: 'Universal Controller',
+        home: Scaffold(
+          body: MyHomePage(),
+          floatingActionButton: FabCircularMenu(
+              fabElevation: 20,
+              fabSize: 40,
+              fabColor: Colors.cyan[300],
+              fabOpenIcon: Icon(Icons.play_arrow),
+              alignment: Alignment.centerRight,
+              ringColor: AppColors.darkButtonBackground,
+              children: <Widget>[
+                IconButton(
+                    icon: Icon(
+                      Icons.stop,
+                      size: 48,
+                      color: Colors.yellow,
+                    ),
+                    onPressed: () async {
+                      await tv.sendKey(KEY_CODES.KEY_STOP);
+                    }),
+                IconButton(
+                    icon: Icon(
+                      Icons.play_arrow,
+                      size: 48,
+                      color: Colors.red,
+                    ),
+                    onPressed: () async {
+                      await tv.sendKey(KEY_CODES.KEY_PLAY);
+                    }),
+                IconButton(
+                    icon: Icon(
+                      Icons.pause,
+                      size: 48,
+                      color: Colors.cyanAccent,
+                    ),
+                    onPressed: () async {
+                      await tv.sendKey(KEY_CODES.KEY_PAUSE);
+                    })
+              ]),
+        ));
   }
 }
 
@@ -61,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Color iconButtonColor = AppColors.darkIconButton;
   Color sliderBackground = AppColors.darkButtonBackground;
   Future canVibrate;
-  SamsungSmartTV tv;
+
   String _latestHardwareButtonEvent;
   StreamSubscription<HardwareButtons.VolumeButtonEvent>
       _volumeButtonSubscription;
@@ -92,14 +129,14 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     var key = keyBox.get('key') as Uint8List;
     var encryptedBox = await Hive.openBox('vaultBox', encryptionKey: key);
-    if (encryptedBox.get('secret') == null) {
-      token = await getTvToken();
-      encryptedBox.put('secret', token);
-      print(encryptedBox.get('secret'));
-    } else {
-      token = encryptedBox.get('secret');
-      await getTvToken();
-    }
+    // if (encryptedBox.get('secret') == null) {
+    //   token = await getTvToken();
+    //   encryptedBox.put('secret', token);
+    //   print(encryptedBox.get('secret'));
+    // } else {
+    token = encryptedBox.get('secret');
+    await getTvToken();
+    // }
   }
 
   void connectTV() async {
@@ -196,7 +233,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Color color = context.watch<TvProvider>().colorStatus;
+    // Color color = context.watch<TvProvider>().colorStatus;
     var size = MediaQuery.of(context).size;
     return SafeArea(
       child: Container(
@@ -379,7 +416,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           child: Icon(
                             Icons.arrow_drop_up,
-                            color: Colors.purple,
+                            color: Color(0xFF584BD2),
                             size: 100,
                           ),
                         ),
@@ -395,7 +432,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           child: Icon(
                             Icons.arrow_left,
-                            color: Colors.red,
+                            color: Color(0xFF584BD2),
                             size: 100,
                           ),
                         ),
@@ -439,7 +476,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           child: Icon(
                             Icons.arrow_right,
-                            color: Color(0xFF59C533),
+                            color: Color(0xFF584BD2),
                             size: 100,
                           ),
                         ),
@@ -469,7 +506,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           },
                           child: Icon(
                             Icons.arrow_drop_down,
-                            color: Colors.yellow,
+                            color: Color(0xFF584BD2),
                             size: 100,
                           ),
                         ),
@@ -496,7 +533,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: Icon(
                                 Icons.arrow_back,
                                 color: iconColor,
-                                size: 38,
+                                size: 28,
                               ),
                             ),
                           ),
@@ -520,6 +557,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Icon(
                               Icons.settings,
                               color: iconColor,
+                              size: 28,
                             ),
                           ),
                         ],
