@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:js';
+import 'package:flutter_samsung_remote/tv_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:upnp/upnp.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -33,16 +36,15 @@ class SamsungSmartTV {
   final String mac;
   final String api;
   final String wsapi;
+  final String deviceName;
   bool isConnected = false;
   String token;
   dynamic info;
   IOWebSocketChannel ws;
   Timer timer;
 
-  SamsungSmartTV({
-    this.host,
-    this.mac,
-  })  : api = "http://$host:8001/api/v2/",
+  SamsungSmartTV({this.host, this.mac, this.deviceName})
+      : api = "http://$host:8001/api/v2/",
         wsapi = "wss://$host:8002/api/v2/",
         services = [];
 
@@ -55,7 +57,7 @@ class SamsungSmartTV {
     this.services.add(service);
   }
 
-  connect({appName = 'DartSamsungSmartTVDriver', String tokenValue}) async {
+  connect({appName = 'SamsungSmartRemote', String tokenValue}) async {
     var completer = new Completer();
 
     if (this.isConnected) {
@@ -69,6 +71,8 @@ class SamsungSmartTV {
 
     // get device info
     info = await getDeviceInfo();
+
+    print("Device info: " + info.toString());
 
     // establish socket connection
     final appNameBase64 = base64.encode(utf8.encode(appName));
@@ -186,6 +190,7 @@ class SamsungSmartTV {
     return Future.delayed(Duration(milliseconds: kKeyDelay));
   }
 
+// send text input
   sendInputString(String key) async {
     if (!isConnected) {
       throw ('Not connected to device. Call `tv.connect()` first!');
@@ -210,6 +215,39 @@ class SamsungSmartTV {
 
     return Future.delayed(Duration(milliseconds: kKeyDelay));
   }
+
+  //Get art mode
+
+  getArtMode(String key) async {
+    if (!isConnected) {
+      throw ('Not connected to device. Call `tv.connect()` first!');
+    }
+
+    print("Send key command  ${key.toString()}");
+    final data = json.encode({
+      "method": "",
+      "params": {
+        "clientIp": "$host",
+        "data": {
+          "request": "get_artmode_status",
+          "id": "8ac2d097-8a3d-43f1-bb36-6de2eccd89ba"
+        },
+        "deviceName": deviceName,
+        "event": "art_app_request",
+        "to": "host"
+      }
+    });
+
+    ws.sink.add(data);
+
+    // add a delay so TV has time to execute
+    Timer(Duration(seconds: kConnectionTimeout), () {
+      throw ('Unable to connect to TV: timeout');
+    });
+
+    return Future.delayed(Duration(milliseconds: kKeyDelay));
+  }
+
   //static method to discover Samsung Smart TVs in the network using the UPNP protocol
 
   static discover() async {
@@ -229,7 +267,6 @@ class SamsungSmartTV {
       }
       try {
         final device = await client.getDevice();
-
         Uri location = Uri.parse(client.location);
 
         final deviceExists = tvs.firstWhere((tv) => tv.host == location.host,
@@ -237,7 +274,8 @@ class SamsungSmartTV {
 
         if (deviceExists == null) {
           print("Found ${device.friendlyName} on IP ${location.host}");
-          final tv = SamsungSmartTV(host: location.host);
+          final tv = SamsungSmartTV(
+              host: location.host, deviceName: device.friendlyName);
           tv.addService({
             "location": client.location,
             "server": client.server,
