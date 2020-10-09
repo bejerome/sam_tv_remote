@@ -124,10 +124,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Future<void> storeToken() async {
     await Hive.initFlutter();
     var keyBox = await Hive.openBox('encryptionKeyBox');
-    if (!keyBox.containsKey('key')) {
-      var key = Hive.generateSecureKey();
-      keyBox.put('key', key);
-    }
+    // if (!keyBox.containsKey('key')) {
+    //   var key = Hive.generateSecureKey();
+    //   keyBox.put('key', key);
+    // }
     var key = keyBox.get('key') as Uint8List;
     var encryptedBox = await Hive.openBox('vaultBox', encryptionKey: key);
     // if (encryptedBox.get('secret') == null) {
@@ -586,8 +586,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                                           .Numeric,
                                                       // Callback for key press event
                                                       onKeyPress: (key) async {
-                                                        await tv.newSendKey(
-                                                            "KEY_" + key.text);
+                                                        await tv
+                                                            .sendInputString(
+                                                                "hello");
+                                                        // await tv.newSendKey(
+                                                        //     "KEY_" + key.text);
                                                       }),
                                                 )));
                                           });
