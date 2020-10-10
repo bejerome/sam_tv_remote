@@ -62,12 +62,30 @@ class UniversalControllerApp extends StatelessWidget {
                     }),
                 IconButton(
                     icon: Icon(
+                      Icons.fast_rewind_sharp,
+                      size: 28,
+                      color: Colors.white,
+                    ),
+                    onPressed: () async {
+                      await tv.sendKey(KEY_CODES.KEY_REWIND);
+                    }),
+                IconButton(
+                    icon: Icon(
                       Icons.play_arrow,
                       size: 48,
                       color: Colors.red,
                     ),
                     onPressed: () async {
                       await tv.sendKey(KEY_CODES.KEY_PLAY);
+                    }),
+                IconButton(
+                    icon: Icon(
+                      Icons.fast_forward,
+                      size: 28,
+                      color: Colors.white,
+                    ),
+                    onPressed: () async {
+                      await tv.sendKey(KEY_CODES.KEY_FF);
                     }),
                 IconButton(
                     icon: Icon(
@@ -364,7 +382,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             GestureDetector(
                               onTap: () async {
-                                await tv.sendKey(KEY_CODES.KEY_ENTER);
+                                print("clicked");
+                                await tv.newSendKey("KEY_ENTER");
                               },
                               child: CustomCircle(
                                 size: size,
@@ -583,14 +602,18 @@ class _MyHomePageState extends State<MyHomePage> {
                                                       fontSize: 20,
                                                       // [A-Z, 0-9]
                                                       type: VirtualKeyboardType
-                                                          .Numeric,
+                                                          .Alphanumeric,
                                                       // Callback for key press event
                                                       onKeyPress: (key) async {
+                                                        // await tv.openTVApp("");
+
                                                         await tv
                                                             .sendInputString(
-                                                                "hello");
+                                                                key.text);
+
                                                         // await tv.newSendKey(
                                                         //     "KEY_" + key.text);
+                                                        //search KEY_DTV_SIGNAL
                                                       }),
                                                 )));
                                           });

@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'dart:js';
-import 'package:flutter_samsung_remote/tv_provider.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 import 'package:upnp/upnp.dart';
 import 'package:web_socket_channel/io.dart';
 
@@ -78,6 +75,7 @@ class SamsungSmartTV {
     final appNameBase64 = base64.encode(utf8.encode(appName));
     String channel =
         "${wsapi}channels/samsung.remote.control?name=$appNameBase64";
+    //"${wsapi}channels/com.samsung.art-app?name=$appNameBase64";
     if (token != null) {
       channel += '&token=$token';
     } else {
@@ -137,6 +135,14 @@ class SamsungSmartTV {
     // ws.sink.close(status.goingAway);
     ws.sink.close();
   }
+
+  // request TV info like udid or model name
+
+  Future<http.Response> openTVApp(String app) async {
+    return http.post("http://192.168.1.222:8001/ws/apps/$app");
+  }
+
+  // disconnect from device
 
   sendKey(KEY_CODES key) async {
     if (!isConnected) {
@@ -218,16 +224,15 @@ class SamsungSmartTV {
 
   //Get art mode
 
-  getArtMode(String key) async {
+  getArtMode() async {
     if (!isConnected) {
       throw ('Not connected to device. Call `tv.connect()` first!');
     }
 
-    print("Send key command  ${key.toString()}");
     final data = json.encode({
       "method": "",
       "params": {
-        "clientIp": "$host",
+        "clientIp": host,
         "data": {
           "request": "get_artmode_status",
           "id": "8ac2d097-8a3d-43f1-bb36-6de2eccd89ba"
@@ -237,7 +242,29 @@ class SamsungSmartTV {
         "to": "host"
       }
     });
+    ws.sink.add(data);
+  }
 
+  getArtModeCallBack() async {
+    if (!isConnected) {
+      throw ('Not connected to device. Call `tv.connect()` first!');
+    }
+
+    final data = json.encode({
+      "method": "ms.channel.emit",
+      "params": {
+        "clientIp": host,
+        "data": {
+          "id": "259320d8-f368-48a4-bf03-789f24a22c0f",
+          "event": "artmode_status",
+          "value": "off",
+          "target_client_id": "8ac2d097-8a3d-43f1-bb36-6de2eccd89ba"
+        },
+        "deviceName": deviceName,
+        "event": "d2d_service_message",
+        "to": "8ac2d097-8a3d-43f1-bb36-6de2eccd89ba"
+      }
+    });
     ws.sink.add(data);
 
     // add a delay so TV has time to execute
