@@ -17,6 +17,8 @@ import 'dart:typed_data';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:virtual_keyboard/virtual_keyboard.dart';
 
+/// Virtual keyboard actions.
+// enum VirtualKeyboardKeyAction { Backspace, Return, Shift, Space }
 SamsungSmartTV tv;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -534,6 +536,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       Container(
+                        color: Colors.transparent,
                         width: size.width,
                         height: size.height * 0.10,
                         margin: EdgeInsets.all(40),
@@ -584,18 +587,21 @@ class _MyHomePageState extends State<MyHomePage> {
                                   GestureDetector(
                                     onTap: () {
                                       showModalBottomSheet<void>(
+                                          backgroundColor: Colors.transparent,
                                           context: context,
                                           builder: (BuildContext context) {
                                             return Container(
+                                                margin: EdgeInsets.only(
+                                                    top: 0, bottom: 30),
                                                 height: 400,
-                                                color: Colors.amber,
+                                                color: Colors.transparent,
                                                 child: Center(
                                                     child: Container(
                                                   // Keyboard is transparent
                                                   color: Colors.teal,
                                                   child: VirtualKeyboard(
                                                       // Default height is 300
-                                                      height: 400,
+                                                      height: 300,
                                                       // Default is black
                                                       textColor: Colors.white,
                                                       // Default 14
@@ -605,8 +611,47 @@ class _MyHomePageState extends State<MyHomePage> {
                                                           .Alphanumeric,
                                                       // Callback for key press event
                                                       onKeyPress: (key) async {
-                                                        inputValue +=
-                                                            key.text.toString();
+                                                        if (key.keyType ==
+                                                            VirtualKeyboardKeyType
+                                                                .String) {
+                                                          inputValue += key.text
+                                                              .toString();
+                                                        } else if (key
+                                                                .keyType ==
+                                                            VirtualKeyboardKeyType
+                                                                .Action) {
+                                                          switch (key.action) {
+                                                            case VirtualKeyboardKeyAction
+                                                                .Backspace:
+                                                              if (inputValue
+                                                                      .length ==
+                                                                  0) return;
+                                                              inputValue = inputValue
+                                                                  .substring(
+                                                                      0,
+                                                                      inputValue
+                                                                              .length -
+                                                                          1);
+                                                              break;
+                                                            case VirtualKeyboardKeyAction
+                                                                .Return:
+                                                              await tv.sendKey(
+                                                                  KEY_CODES
+                                                                      .KEY_ENTER);
+                                                              break;
+                                                            case VirtualKeyboardKeyAction
+                                                                .Space:
+                                                              inputValue += " ";
+                                                              break;
+                                                            case VirtualKeyboardKeyAction
+                                                                .Shift:
+                                                              inputValue +=
+                                                                  key.capstext;
+                                                              break;
+                                                            default:
+                                                          }
+                                                        }
+
                                                         await tv
                                                             .sendInputString(
                                                                 inputValue);
