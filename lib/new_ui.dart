@@ -117,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Color iconButtonColor = AppColors.darkIconButton;
   Color sliderBackground = AppColors.darkButtonBackground;
   Future canVibrate;
-
+  String inputValue = "";
   String _latestHardwareButtonEvent;
   StreamSubscription<HardwareButtons.VolumeButtonEvent>
       _volumeButtonSubscription;
@@ -605,11 +605,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                                           .Alphanumeric,
                                                       // Callback for key press event
                                                       onKeyPress: (key) async {
-                                                        // await tv.openTVApp("");
-
+                                                        inputValue +=
+                                                            key.text.toString();
                                                         await tv
                                                             .sendInputString(
-                                                                key.text);
+                                                                inputValue);
+
+                                                        print(inputValue);
 
                                                         // await tv.newSendKey(
                                                         //     "KEY_" + key.text);
