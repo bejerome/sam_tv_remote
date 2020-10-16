@@ -1,13 +1,15 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'dart:io';
 import 'package:fab_circular_menu/fab_circular_menu.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_samsung_remote/tv_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:vibration/vibration.dart';
+import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'app_colors.dart';
 import 'device.dart';
 import 'key_codes.dart';
@@ -16,11 +18,23 @@ import 'package:hive/hive.dart';
 import 'dart:typed_data';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:virtual_keyboard/virtual_keyboard.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 /// Virtual keyboard actions.
-// enum VirtualKeyboardKeyAction { Backspace, Return, Shift, Space }
+enum VirtualKeyboardKeyAction { Backspace, Return, Shift, Space }
 SamsungSmartTV tv;
-void main() {
+// Choose from any of these available methods
+// enum FeedbackType {
+//   success,
+//   error,
+//   warning,
+//   selection,
+//   impact,
+//   heavy,
+//   medium,
+//   light
+// }
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
@@ -118,18 +132,33 @@ class _MyHomePageState extends State<MyHomePage> {
   Color buttonBackgroundColor = AppColors.darkButtonBackground;
   Color iconButtonColor = AppColors.darkIconButton;
   Color sliderBackground = AppColors.darkButtonBackground;
-  Future canVibrate;
   String inputValue = "";
   String _latestHardwareButtonEvent;
   StreamSubscription<HardwareButtons.VolumeButtonEvent>
       _volumeButtonSubscription;
   String token;
   bool status = false;
+  SharedPreferences _pref;
+  bool _canVibrate;
 
   @override
   void initState() {
     willAcceptStream = new BehaviorSubject<int>();
     willAcceptStream.add(0);
+
+    super.initState();
+    init();
+  }
+
+  void init() async {
+    bool canVibrate = await Vibrate.canVibrate;
+    _pref = await SharedPreferences.getInstance();
+    setState(() {
+      _canVibrate = canVibrate;
+      _canVibrate
+          ? print("This device can vibrate")
+          : print("This device cannot vibrate");
+    });
     _volumeButtonSubscription =
         HardwareButtons.volumeButtonEvents.listen((event) {
       setState(() {
@@ -137,39 +166,52 @@ class _MyHomePageState extends State<MyHomePage> {
         volumeButtonActions(_latestHardwareButtonEvent);
       });
     });
-    connectTV();
-    super.initState();
+    setUp();
   }
 
-  Future<void> storeToken() async {
-    await Hive.initFlutter();
-    var keyBox = await Hive.openBox('encryptionKeyBox');
-    // if (!keyBox.containsKey('key')) {
-    //   var key = Hive.generateSecureKey();
-    //   keyBox.put('key', key);
-    // }
-    var key = keyBox.get('key') as Uint8List;
-    var encryptedBox = await Hive.openBox('vaultBox', encryptionKey: key);
-    // if (encryptedBox.get('secret') == null) {
-    //   token = await getTvToken();
-    //   encryptedBox.put('secret', token);
-    //   print(encryptedBox.get('secret'));
-    // } else {
-    token = encryptedBox.get('secret');
-    await getTvToken();
-    // }
+  void setUp() async {
+    await wakeTV();
+    await discoverTV();
+    token = await getTvToken();
+    if (tv.token != null) {
+      print(token);
+    }
+    var info = await tv.getDeviceInfo();
+    var details = jsonDecode(info.body);
+    print(details['device']['wifiMac']);
   }
 
-  void connectTV() async {
-    try {
-      await storeToken();
-      status = tv.isConnected;
-      setColor(status);
-      // await tv.connect(tokenValue: token);
-    } catch (e) {
-      print(e);
+  Future<void> viewToken() async {
+    print(tv.token);
+  }
+
+  Future<void> wakeTV() async {
+    if (_pref.containsKey('token')) {
+      try {
+        await SamsungSmartTV.wakeOnLan(
+            _pref.getString('host'), _pref.getString('mac'));
+        // await tv.connect(tokenValue: _pref.getString('token'));
+      } catch (e) {
+        print("Failed to Wake on lan");
+      }
     }
   }
+
+  Future<void> discoverTV() async {
+    try {
+      tv = await SamsungSmartTV.discover();
+    } catch (e) {
+      print("Failed to discover tv");
+    }
+  }
+
+  // Future<void> connectTV() async {
+  //   try {
+  //     tv.connect(tokenValue: token);
+  //   } catch (e) {
+  //     print("failed to connect");
+  //   }
+  // }
 
   setColor(status) {
     Color result;
@@ -184,12 +226,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Future<String> getTvToken() async {
-    try {
-      tv = await SamsungSmartTV.discover();
+    if (_pref.containsKey('token') != true) {
       await tv.connect(tokenValue: token);
-    } catch (e) {
-      print(e);
+
+      // token = tv.token;
+
+      // status = tv.isConnected;
+      // setColor(status);
     }
+
     return tv.token;
   }
 
@@ -243,7 +288,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void vibrate() {
-    Vibration.vibrate(duration: 5);
+    var _type = FeedbackType.selection;
+    Vibrate.feedback(_type);
   }
 
   @override
@@ -254,7 +300,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Color color = context.watch<TvProvider>().colorStatus;
     var size = MediaQuery.of(context).size;
     return SafeArea(
         child: Container(
@@ -284,7 +329,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 size: 28,
                               ),
                               GestureDetector(
-                                onTap: connectTV,
+                                onTap: () => null,
                                 child: Icon(
                                   Icons.keyboard_arrow_down,
                                   color: selectColor,

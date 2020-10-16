@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:upnp/server.dart';
 import 'package:upnp/upnp.dart';
 import 'package:web_socket_channel/io.dart';
-
+import 'package:wake_on_lan/wake_on_lan.dart';
 import 'key_codes.dart';
 
 final int kConnectionTimeout = 60;
@@ -54,7 +55,8 @@ class SamsungSmartTV {
     this.services.add(service);
   }
 
-  connect({appName = 'SamsungSmartRemote', String tokenValue}) async {
+  Future<void> connect(
+      {appName = 'SamsungSmartRemote', String tokenValue}) async {
     var completer = new Completer();
 
     if (this.isConnected) {
@@ -126,7 +128,7 @@ class SamsungSmartTV {
 
   Future<http.Response> getDeviceInfo() async {
     print("Get device info from $api");
-    return http.get(this.api);
+    return await http.get(this.api);
   }
 
   // disconnect from device
@@ -139,7 +141,7 @@ class SamsungSmartTV {
   // request TV info like udid or model name
 
   Future<http.Response> openTVApp(String app) async {
-    return http.post("http://192.168.1.222:8001/ws/apps/$app");
+    return http.post("http://$host:8001/ws/apps/$app");
   }
 
   // disconnect from device
@@ -222,57 +224,46 @@ class SamsungSmartTV {
     return Future.delayed(Duration(milliseconds: kKeyDelay));
   }
 
-  //Get art mode
-
-  getArtMode() async {
+//Get installed Apps
+  getInstalledApps() async {
     if (!isConnected) {
       throw ('Not connected to device. Call `tv.connect()` first!');
     }
 
     final data = json.encode({
-      "method": "",
-      "params": {
-        "clientIp": host,
-        "data": {
-          "request": "get_artmode_status",
-          "id": "8ac2d097-8a3d-43f1-bb36-6de2eccd89ba"
-        },
-        "deviceName": deviceName,
-        "event": "art_app_request",
-        "to": "host"
-      }
+      "method": 'ms.channel.emit',
+      "params": {"data": '', "event": 'ed.installedApp.get', "to": 'host'}
     });
     ws.sink.add(data);
   }
 
-  getArtModeCallBack() async {
+  getApplication() async {
     if (!isConnected) {
       throw ('Not connected to device. Call `tv.connect()` first!');
     }
-
     final data = json.encode({
-      "method": "ms.channel.emit",
+      "method": 'ms.channel.emit',
+      "params": {"data": '', "event": 'ed.edenApp.get', "to": 'host'}
+    });
+    ws.sink.add(data);
+  }
+
+  getApplicationIcon() async {
+    if (!isConnected) {
+      throw ('Not connected to device. Call `tv.connect()` first!');
+    }
+    final data = json.encode({
+      "method": 'ms.channel.emit',
       "params": {
-        "clientIp": host,
         "data": {
-          "id": "259320d8-f368-48a4-bf03-789f24a22c0f",
-          "event": "artmode_status",
-          "value": "off",
-          "target_client_id": "8ac2d097-8a3d-43f1-bb36-6de2eccd89ba"
+          "icon_path":
+              "/opt/share/webappservice/apps_icon/FirstScreen/11101200001/250x250.png",
         },
-        "deviceName": deviceName,
-        "event": "d2d_service_message",
-        "to": "8ac2d097-8a3d-43f1-bb36-6de2eccd89ba"
+        "event": 'ed.apps.icon',
+        "to": 'host'
       }
     });
     ws.sink.add(data);
-
-    // add a delay so TV has time to execute
-    Timer(Duration(seconds: kConnectionTimeout), () {
-      throw ('Unable to connect to TV: timeout');
-    });
-
-    return Future.delayed(Duration(milliseconds: kKeyDelay));
   }
 
   //static method to discover Samsung Smart TVs in the network using the UPNP protocol
@@ -324,5 +315,31 @@ class SamsungSmartTV {
     });
 
     return completer.future;
+  }
+
+  static Future<bool> wakeOnLan(String _ip, String _mac) async {
+    try {
+      String ip = _ip;
+      String mac = _mac;
+      // Validate that the two strings are formatted correctly
+      if (!IPv4Address.validate(ip)) {
+        print('Invalid IPv4 Address String');
+        return false;
+      }
+      if (!MACAddress.validate(mac)) {
+        print('Invalid MAC Address String');
+        return false;
+      }
+      // Create the IPv4 and MAC objects
+      IPv4Address ipv4Address = IPv4Address.from(ip);
+      MACAddress macAddress = MACAddress.from(mac);
+      // Send the WOL packet
+      // Port parameter is optional, set to 55 here as an example, but defaults to port 9
+      WakeOnLAN.from(ipv4Address, macAddress, port: 55).wake();
+      return true;
+    } catch (e) {
+      print("error waking lan");
+      return false;
+    }
   }
 }

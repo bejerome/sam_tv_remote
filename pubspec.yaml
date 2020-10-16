@@ -21,14 +21,16 @@ dependencies:
     sdk: flutter
   rxdart: ^0.24.1
   http: ^0.12.0+4
-  vibration: ^1.6.1
+  # vibration: ^1.6.1
   hardware_buttons: ^1.0.0
   hive: ^1.4.4
   hive_flutter: ^0.3.1
   provider: ^4.3.2+2
   fab_circular_menu: ^1.0.0
   virtual_keyboard: ^0.1.4
-
+  wake_on_lan: ^1.1.1+1
+  shared_preferences: ^0.5.12
+  flutter_vibrate: ^1.0.0
   web_socket_channel:
     git: https://github.com/kecson/web_socket_channel
   upnp: ^2.0.0+1
