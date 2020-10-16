@@ -78,10 +78,10 @@ class SamsungSmartTV {
     String channel =
         "${wsapi}channels/samsung.remote.control?name=$appNameBase64";
     //"${wsapi}channels/com.samsung.art-app?name=$appNameBase64";
-    if (token != null) {
-      channel += '&token=$token';
-    } else {
+    if (tokenValue != null) {
       channel += '&token=$tokenValue';
+    } else {
+      channel += '&token=$token';
     }
 
     // log.info(`Connect to ${channel}`)

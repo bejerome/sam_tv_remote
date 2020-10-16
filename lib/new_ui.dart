@@ -171,14 +171,22 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void setUp() async {
     await wakeTV();
-    await discoverTV();
-    token = await getTvToken();
-    if (tv.token != null) {
-      print(token);
+    await connectTV();
+    if (_pref.getString('token') == null) {
+      await discoverTV();
+      token = await getTvToken();
+      if (tv.token != null) {
+        _pref.setString('token', token);
+        print("Set Token: $token");
+      }
+      var info = await tv.getDeviceInfo();
+      var details = jsonDecode(info.body);
+      _pref.setString('host', tv.host);
+      _pref.setString('mac', details['device']['wifiMac']);
+      print("Set Mac ${details['device']['wifiMac']}");
     }
-    var info = await tv.getDeviceInfo();
-    var details = jsonDecode(info.body);
-    print(details['device']['wifiMac']);
+    status = tv.isConnected;
+    setColor(status);
   }
 
   Future<void> viewToken() async {
@@ -190,7 +198,6 @@ class _MyHomePageState extends State<MyHomePage> {
       try {
         await SamsungSmartTV.wakeOnLan(
             _pref.getString('host'), _pref.getString('mac'));
-        // await tv.connect(tokenValue: _pref.getString('token'));
       } catch (e) {
         print("Failed to Wake on lan");
       }
@@ -205,13 +212,21 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // Future<void> connectTV() async {
-  //   try {
-  //     tv.connect(tokenValue: token);
-  //   } catch (e) {
-  //     print("failed to connect");
-  //   }
-  // }
+  Future<void> connectTV() async {
+    token = _pref.getString('token');
+
+    try {
+      if (token != null) {
+        tv = new SamsungSmartTV(
+            deviceName: "Samsung TV",
+            host: _pref.getString('host'),
+            mac: _pref.getString('mac'));
+        await tv.connect(tokenValue: token);
+      }
+    } catch (e) {
+      print("failed to connect");
+    }
+  }
 
   setColor(status) {
     Color result;
