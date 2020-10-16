@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
+
 import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +14,7 @@ import 'app_colors.dart';
 import 'device.dart';
 import 'key_codes.dart';
 import 'package:hardware_buttons/hardware_buttons.dart' as HardwareButtons;
-import 'package:hive/hive.dart';
-import 'dart:typed_data';
-import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:virtual_keyboard/virtual_keyboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -56,7 +54,6 @@ class UniversalControllerApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Universal Controller',
         home: Scaffold(
           body: MyHomePage(),
           floatingActionButton: FabCircularMenu(
@@ -343,14 +340,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                 color: selectColor,
                                 size: 28,
                               ),
-                              GestureDetector(
-                                onTap: () => null,
-                                child: Icon(
-                                  Icons.keyboard_arrow_down,
-                                  color: selectColor,
-                                  size: 28,
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -444,7 +433,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             GestureDetector(
                               onTap: () async {
-                                print("clicked");
                                 await tv.newSendKey("KEY_ENTER");
                               },
                               child: CustomCircle(
@@ -520,9 +508,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             Positioned(
                               top: 80,
-                              left: MediaQuery.of(context).size.width / 3.3,
+                              left: size.width * 0.32,
                               child: Container(
-                                padding: EdgeInsets.all(1),
+                                padding: EdgeInsets.all(2),
                                 width: size.width * 0.4,
                                 height: size.width * 0.4,
                                 decoration: BoxDecoration(
@@ -549,7 +537,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             Positioned(
                               top: size.height / 8,
-                              right: 20.0,
+                              right: size.width * 0.025,
                               child: GestureDetector(
                                 onTap: () async {
                                   vibrate();
