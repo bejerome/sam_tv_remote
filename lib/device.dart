@@ -80,6 +80,7 @@ class SamsungSmartTV {
     //"${wsapi}channels/com.samsung.art-app?name=$appNameBase64";
     if (tokenValue != null) {
       channel += '&token=$tokenValue';
+      this.token = tokenValue;
     } else {
       channel += '&token=$token';
     }
@@ -235,6 +236,7 @@ class SamsungSmartTV {
       "params": {"data": '', "event": 'ed.installedApp.get', "to": 'host'}
     });
     ws.sink.add(data);
+    return Future.delayed(Duration(milliseconds: kKeyDelay));
   }
 
   getApplication() async {
@@ -317,7 +319,7 @@ class SamsungSmartTV {
     return completer.future;
   }
 
-  static Future<bool> wakeOnLan(String _ip, String _mac) async {
+  static wakeOnLan(String _ip, String _mac) {
     try {
       String ip = _ip;
       String mac = _mac;

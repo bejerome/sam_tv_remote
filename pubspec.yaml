@@ -29,6 +29,7 @@ dependencies:
   fab_circular_menu: ^1.0.0
   virtual_keyboard: ^0.1.4
   wake_on_lan: ^1.1.1+1
+  adv_fab: ^1.0.5
   shared_preferences: ^0.5.12
   flutter_vibrate: ^1.0.0
   web_socket_channel:
@@ -61,6 +62,7 @@ flutter:
   uses-material-design: true
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/
     - assets/icons/
   #  - images/a_dot_ham.jpeg
   # An image asset can refer to one or more resolution-specific "variants", see
