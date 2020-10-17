@@ -318,7 +318,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void setBar() {
-    myMapList['app'] = ["Netflix", "HBO NOW", "Prime Video", "YouTube"];
+    myMapList['app'] = ["Netflix", "HBO", "Prime", "YouTube"];
     myMapList['logo'] = [
       "assets/netflix_logo.jpeg",
       "assets/hbo_logo.jpeg",

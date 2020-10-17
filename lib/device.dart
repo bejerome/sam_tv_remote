@@ -142,7 +142,26 @@ class SamsungSmartTV {
   // request TV info like udid or model name
 
   Future<http.Response> openTVApp(String app) async {
-    return http.post("http://$host:8001/ws/apps/$app");
+    String address;
+    switch (app) {
+      case "Prime":
+        {
+          address = "http://$host:8001/api/v2/applications/3201512006785";
+        }
+        break;
+      case "HBO":
+        {
+          address = "http://$host:8001/api/v2/applications/3201512006785";
+        }
+        break;
+
+      default:
+        {
+          address = "http://$host:8001/ws/apps/$app";
+        }
+        break;
+    }
+    return http.post(address);
   }
 
   // disconnect from device
@@ -226,7 +245,7 @@ class SamsungSmartTV {
   }
 
 //Get installed Apps
-  getInstalledApps() async {
+  Future<http.Response> getInstalledApps() async {
     if (!isConnected) {
       throw ('Not connected to device. Call `tv.connect()` first!');
     }
@@ -236,6 +255,11 @@ class SamsungSmartTV {
       "params": {"data": '', "event": 'ed.installedApp.get', "to": 'host'}
     });
     ws.sink.add(data);
+    // add a delay so TV has time to execute
+    Timer(Duration(seconds: kConnectionTimeout), () {
+      throw ('Unable to connect to TV: timeout');
+    });
+
     return Future.delayed(Duration(milliseconds: kKeyDelay));
   }
 
