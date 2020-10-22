@@ -318,6 +318,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void setBar() {
+    //3201601007230 HBO
+    //org.tizen.browser internet
     myMapList['app'] = ["Netflix", "HBO", "Prime", "YouTube"];
     myMapList['logo'] = [
       "assets/netflix_logo.jpeg",

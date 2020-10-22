@@ -151,7 +151,7 @@ class SamsungSmartTV {
         break;
       case "HBO":
         {
-          address = "http://$host:8001/api/v2/applications/3201512006785";
+          address = "http://$host:8001/api/v2/applications/3201601007230";
         }
         break;
 
