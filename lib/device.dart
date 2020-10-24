@@ -23,10 +23,10 @@ final kUpnpTimeout = 1000;
 
 // const log = getLogger('SamsungRemote')
 
-// const CONNECTION_TIMEOUT = 60000
-// const KEY_DELAY = 200
-// const WAKE_ON_LAN_DELAY = 5000
-// const UPNP_TIMEOUT = 1000
+const CONNECTION_TIMEOUT = 60000;
+const KEY_DELAY = 200;
+const WAKE_ON_LAN_DELAY = 5000;
+const UPNP_TIMEOUT = 1000;
 
 class SamsungSmartTV {
   final List<Map<String, dynamic>> services;
@@ -346,7 +346,7 @@ class SamsungSmartTV {
   static wakeOnLan(String _ip, String _mac) {
     try {
       String ip = _ip;
-      String mac = _mac;
+      String mac = "9C:8C:6E:bF:6D:8F";
       // Validate that the two strings are formatted correctly
       if (!IPv4Address.validate(ip)) {
         print('Invalid IPv4 Address String');

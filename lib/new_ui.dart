@@ -11,6 +11,7 @@ import 'package:flutter_samsung_remote/tv_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
+import 'package:wake_on_lan/wake_on_lan.dart';
 import 'app_colors.dart';
 import 'device.dart';
 import 'key_codes.dart';
@@ -348,9 +349,14 @@ class _MyHomePageState extends State<MyHomePage> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0, left: 8),
                     child: Center(
-                        child: Text(
-                      'Apps',
-                      style: TextStyle(color: Colors.white),
+                        child: GestureDetector(
+                      onTap: () {
+                        mabialaFABController.collapseFAB();
+                      },
+                      child: Text(
+                        'Apps',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     )),
                   ),
                 ]),
@@ -448,6 +454,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             onTap: () async {
                               print("Power Pressed");
                               vibrate();
+                              await SamsungSmartTV.wakeOnLan(tv.host, tv.mac);
+
                               await tv.sendKey(KEY_CODES.KEY_POWER);
                             },
                             child: Container(
@@ -467,7 +475,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                           GestureDetector(
                             onTap: () {
-                              toggleTheme();
+                              // toggleTheme();
                               vibrate();
                             },
                             child: Container(
@@ -584,12 +592,12 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ),
                           Positioned(
-                            top: 80,
-                            left: size.width * 0.32,
+                            top: size.height / 7.5,
+                            left: size.width / 2.6,
                             child: Container(
                               padding: EdgeInsets.all(2),
-                              width: size.width * 0.4,
-                              height: size.width * 0.4,
+                              width: size.width * 0.27,
+                              height: size.width * 0.27,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   begin: Alignment.topLeft,
