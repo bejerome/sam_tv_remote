@@ -52,6 +52,16 @@ void main() async {
 }
 
 class UniversalControllerApp extends StatelessWidget {
+  final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();
+
+  void toggleFab() {
+    if (fabKey.currentState.isOpen) {
+      fabKey.currentState.close();
+    } else {
+      fabKey.currentState.open();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -59,6 +69,7 @@ class UniversalControllerApp extends StatelessWidget {
         home: Scaffold(
           body: MyHomePage(),
           floatingActionButton: FabCircularMenu(
+              key: fabKey,
               fabElevation: 20,
               fabSize: 40,
               fabColor: Colors.cyan[300],
@@ -74,6 +85,7 @@ class UniversalControllerApp extends StatelessWidget {
                     ),
                     onPressed: () async {
                       await tv.sendKey(KEY_CODES.KEY_STOP);
+                      toggleFab();
                     }),
                 IconButton(
                     icon: Icon(
@@ -83,6 +95,7 @@ class UniversalControllerApp extends StatelessWidget {
                     ),
                     onPressed: () async {
                       await tv.sendKey(KEY_CODES.KEY_REWIND);
+                      toggleFab();
                     }),
                 IconButton(
                     icon: Icon(
@@ -92,6 +105,7 @@ class UniversalControllerApp extends StatelessWidget {
                     ),
                     onPressed: () async {
                       await tv.sendKey(KEY_CODES.KEY_PLAY);
+                      toggleFab();
                     }),
                 IconButton(
                     icon: Icon(
@@ -101,6 +115,7 @@ class UniversalControllerApp extends StatelessWidget {
                     ),
                     onPressed: () async {
                       await tv.sendKey(KEY_CODES.KEY_FF);
+                      toggleFab();
                     }),
                 IconButton(
                     icon: Icon(
@@ -110,6 +125,7 @@ class UniversalControllerApp extends StatelessWidget {
                     ),
                     onPressed: () async {
                       await tv.sendKey(KEY_CODES.KEY_PAUSE);
+                      toggleFab();
                     })
               ]),
         ));
@@ -416,6 +432,7 @@ class _MyHomePageState extends State<MyHomePage> {
               : mabialaFABController.collapseFAB();
         },
       ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Container(
           width: size.width,
           height: size.height,
