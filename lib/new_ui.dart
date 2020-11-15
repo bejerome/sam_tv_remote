@@ -57,8 +57,6 @@ class UniversalControllerApp extends StatelessWidget {
   void toggleFab() {
     if (fabKey.currentState.isOpen) {
       fabKey.currentState.close();
-    } else {
-      fabKey.currentState.open();
     }
   }
 
@@ -420,7 +418,7 @@ class _MyHomePageState extends State<MyHomePage> {
         floatingSpaceBarContainerWidth: 100,
         useAsFloatingActionButton: true,
         floatingActionButtonExpendedWidth: 90,
-        useAsNavigationBar: useNavigationBar,
+        useAsNavigationBar: false,
         controller: mabialaFABController,
         animationDuration: Duration(milliseconds: 350),
         useElevation: true,
@@ -433,16 +431,21 @@ class _MyHomePageState extends State<MyHomePage> {
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      resizeToAvoidBottomInset: true,
       body: Container(
+          constraints:
+              BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
+          padding: EdgeInsets.all(10.0),
           width: size.width,
           height: size.height,
           color: backgroundColor,
           child: FittedBox(
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
             alignment: Alignment.center,
             child: Center(
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Container(
                       width: size.width,
@@ -688,7 +691,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Container(
                       width: size.width,
                       height: size.height / 18,
-                      margin: EdgeInsets.all(40),
+                      margin: EdgeInsets.only(top: 20),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
@@ -821,6 +824,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         ],
                       ),
                     ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.10,
+                    )
                   ]),
             ),
           )),
