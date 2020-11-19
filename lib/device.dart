@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:upnp/server.dart';
 import 'package:upnp/upnp.dart';
 import 'package:web_socket_channel/io.dart';
+import 'package:upnp/server.dart';
 import 'package:wake_on_lan/wake_on_lan.dart';
 import 'key_codes.dart';
 
@@ -14,7 +14,7 @@ final kWakeOnLanDelay = 5000;
 final kUpnpTimeout = 1000;
 
 // import wol from 'wake_on_lan'
-// import WebSocket from 'ws'
+// import WebSocket from 'ws';
 // import request from 'request-promise'
 // import SSDP from 'node-ssdp'
 
@@ -115,11 +115,11 @@ class SamsungSmartTV {
       isConnected = true;
       completer.complete();
 
-      // timer = Timer(Duration(seconds: kConnectionTimeout), () {
-      //   throw ('Unable to connect to TV: timeout');
-      // });
+      timer = Timer(Duration(seconds: kConnectionTimeout), () {
+        throw ('Unable to connect to TV: timeout');
+      });
 
-      // ws.sink.add("received!");
+      ws.sink.add("received!");
     });
 
     return completer.future;
@@ -346,7 +346,7 @@ class SamsungSmartTV {
   static wakeOnLan(String _ip, String _mac) {
     try {
       String ip = _ip;
-      String mac = "9C:8C:6E:bF:6D:8F";
+      String mac = _mac;
       // Validate that the two strings are formatted correctly
       if (!IPv4Address.validate(ip)) {
         print('Invalid IPv4 Address String');
