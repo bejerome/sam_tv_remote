@@ -23,17 +23,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Virtual keyboard actions.
 enum VirtualKeyboardKeyAction { Backspace, Return, Shift, Space }
 SamsungSmartTV tv;
-// Choose from any of these available methods
-// enum FeedbackType {
-//   success,
-//   error,
-//   warning,
-//   selection,
-//   impact,
-//   heavy,
-//   medium,
-//   light
-// }
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
@@ -578,7 +568,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Container(
                       margin: EdgeInsets.only(top: 20),
                       width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height / 2.5,
+                      height: MediaQuery.of(context).size.height / 2.6,
                       child: Stack(
                         children: <Widget>[
                           Positioned(
@@ -612,12 +602,13 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ),
                           Positioned(
-                            top: size.height / 7.5,
+                            top: size.height * 0.13,
                             left: size.width / 2.6,
                             child: Container(
-                              padding: EdgeInsets.all(2),
-                              width: size.width * 0.27,
-                              height: size.width * 0.27,
+                              margin: EdgeInsets.zero,
+                              padding: EdgeInsets.all(5),
+                              width: size.width * 0.26,
+                              height: size.height / 7.5,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   begin: Alignment.topLeft,
@@ -656,17 +647,20 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ),
                           Positioned(
-                            top: size.height / 7.5,
+                            top: size.height * 0.13,
                             left: size.width / 2.6,
                             child: GestureDetector(
                               onTap: () async {
                                 vibrate();
                                 await tv.sendKey(KEY_CODES.KEY_ENTER);
                               },
-                              child: Icon(
-                                Icons.adjust,
-                                color: Color(0xFF584BD2),
-                                size: 100,
+                              child: Container(
+                                margin: EdgeInsets.zero,
+                                child: Icon(
+                                  Icons.adjust,
+                                  color: Color(0xFF584BD2),
+                                  size: 100,
+                                ),
                               ),
                             ),
                           ),
