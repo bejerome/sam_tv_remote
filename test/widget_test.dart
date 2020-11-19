@@ -6,7 +6,7 @@
 // tree, read text, and verify that the values of widget properties are correct.
 
 import 'package:flutter/material.dart';
-import 'package:flutter_samsung_remote/main.dart';
+import 'package:sam_tv_remote/main.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
