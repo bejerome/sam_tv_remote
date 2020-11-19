@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:upnp/upnp.dart';
 import 'package:web_socket_channel/io.dart';
-import 'package:upnp/server.dart';
 import 'package:wake_on_lan/wake_on_lan.dart';
 import 'key_codes.dart';
 

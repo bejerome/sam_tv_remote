@@ -11,7 +11,7 @@ import 'package:flutter_samsung_remote/tv_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
-import 'package:wake_on_lan/wake_on_lan.dart';
+
 import 'app_colors.dart';
 import 'device.dart';
 import 'key_codes.dart';
