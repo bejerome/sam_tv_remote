@@ -7,10 +7,12 @@ Inspired from [Universal Remote](https://apps.apple.com/us/app/universal-remote-
 Included codes from Flutter Samsung Remote [Universal Remote](https://github.com/aelshamy/flutter_samsung_remote)
 
 You can discover Samsung Smart TVs in your network using the discover button. It uses the UPNP protocol to lookup services.
-Arrows | Numpad
+HomePage | Apps Shortcuts
 :-------------------------:|:-------------------------:|
 <img src="screens/screen.png" width="400" /> |<img src="screens/screen_menu.png" width="400" /> 
 
+Player Buttons
+:-------------------------:|:-------------------------:|
 <img src="screens/screen_player.png" width="400" />
 
 ## License
