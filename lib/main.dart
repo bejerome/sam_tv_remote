@@ -148,7 +148,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool useAsFloatingActionButton = false;
   bool useNavigationBar = false;
   Map<String, List<String>> myMapList = Map();
-
+  bool isAlwaysCaps = false;
   @override
   void initState() {
     mabialaFABController = AdvFabController();
@@ -731,6 +731,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                                 GestureDetector(
                                   onTap: () {
+                                    inputValue = "";
                                     showModalBottomSheet<void>(
                                         backgroundColor: Colors.transparent,
                                         context: context,
@@ -745,6 +746,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 // Keyboard is transparent
                                                 color: Colors.teal,
                                                 child: VirtualKeyboard(
+                                                    alwaysCaps: isAlwaysCaps,
                                                     // Default height is 300
                                                     height: 300,
                                                     // Default is black
@@ -759,47 +761,62 @@ class _MyHomePageState extends State<MyHomePage> {
                                                       if (key.keyType ==
                                                           VirtualKeyboardKeyType
                                                               .String) {
-                                                        inputValue +=
-                                                            key.text.toString();
+                                                        var txt =
+                                                            (isAlwaysCaps ==
+                                                                    true)
+                                                                ? key.capsText
+                                                                : key.text
+                                                                    .toString();
+                                                        inputValue += txt;
                                                       } else if (key.keyType ==
                                                           VirtualKeyboardKeyType
                                                               .Action) {
-                                                        switch (key.action) {
-                                                          case VirtualKeyboardKeyAction
-                                                              .Backspace:
+                                                        switch (key.action
+                                                            .toString()) {
+                                                          case "VirtualKeyboardKeyAction.Backspace":
+                                                            print("backspace");
                                                             if (inputValue
                                                                     .length ==
-                                                                0) return;
-                                                            inputValue = inputValue
-                                                                .substring(
-                                                                    0,
-                                                                    inputValue
-                                                                            .length -
-                                                                        1);
+                                                                0) {
+                                                              return;
+                                                            } else {
+                                                              print(
+                                                                  "backspace");
+                                                              inputValue = inputValue
+                                                                  .substring(
+                                                                      0,
+                                                                      inputValue
+                                                                              .length -
+                                                                          1);
+                                                            }
                                                             break;
-                                                          case VirtualKeyboardKeyAction
-                                                              .Return:
+                                                          case "VirtualKeyboardKeyAction.Return":
                                                             await tv.sendKey(
                                                                 KEY_CODES
                                                                     .KEY_ENTER);
                                                             break;
-                                                          case VirtualKeyboardKeyAction
-                                                              .Space:
+                                                          case "VirtualKeyboardKeyAction.Space":
                                                             inputValue += " ";
                                                             break;
-                                                          case VirtualKeyboardKeyAction
-                                                              .Shift:
-                                                            inputValue +=
-                                                                key.capstext;
+                                                          case "VirtualKeyboardKeyAction.Shift":
+                                                            setState(() {
+                                                              if (isAlwaysCaps ==
+                                                                  true) {
+                                                                isAlwaysCaps =
+                                                                    false;
+                                                              } else {
+                                                                isAlwaysCaps =
+                                                                    true;
+                                                              }
+                                                            });
+
                                                             break;
                                                           default:
                                                         }
                                                       }
-
+                                                      // print(inputValue);
                                                       await tv.sendInputString(
                                                           inputValue);
-
-                                                      print(inputValue);
 
                                                       // await tv.newSendKey(
                                                       //     "KEY_" + key.text);
