@@ -11,7 +11,7 @@ HomePage | Apps Shortcuts
 :-------------------------:|:-------------------------:|
 <img src="screens/screen.png" width="400" /> |<img src="screens/screen_menu.png" width="400" /> 
 
-Player Buttons
+Player Buttons | Keyboard
 :-------------------------:|:-------------------------:|
 <img src="screens/screen_player.png" width="400" /> |<img src="screens/screen_menu.png" width="400" /> 
 
