@@ -13,7 +13,8 @@ HomePage | Apps Shortcuts
 
 Player Buttons
 :-------------------------:|:-------------------------:|
-<img src="screens/screen_player.png" width="400" />
+<img src="screens/screen_player.png" width="400" /> |<img src="screens/screen_menu.png" width="400" /> 
+
 
 ## License
 
