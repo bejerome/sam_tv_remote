@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:adv_fab/adv_fab.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:flutter_samsung_remote/app_colors.dart';
 import 'package:flutter_samsung_remote/device.dart';
 import 'package:flutter_samsung_remote/key_codes.dart';
@@ -14,6 +13,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hardware_buttons/hardware_buttons.dart' as HardwareButtons;
 import 'package:virtual_keyboard/virtual_keyboard.dart';
+import 'package:sensors/sensors.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key}) : super(key: key);
@@ -47,6 +47,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   bool _isInForeground = true;
   bool _isPaused = false;
   bool _isInInactive = false;
+  List<double> _accelerometerValues;
+
+  List<StreamSubscription<dynamic>> _streamSubscriptions =
+      <StreamSubscription<dynamic>>[];
+  List<double> _history = [0.1, 0.1, 0.1];
+  double xChange;
+  double yChange;
   @override
   void initState() {
     mabialaFABController = AdvFabController();
@@ -55,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     init();
+    gyroSetup();
   }
 
   void init() async {
@@ -74,6 +82,59 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       });
     });
     await setUp();
+  }
+
+  void controlDirection(direction) async {
+    switch (direction) {
+      case 'left':
+        await tv.sendKey(KEY_CODES.KEY_LEFT);
+        break;
+      case 'right':
+        await tv.sendKey(KEY_CODES.KEY_RIGHT);
+        break;
+      case 'up':
+        await tv.sendKey(KEY_CODES.KEY_UP);
+        break;
+      case 'down':
+        await tv.sendKey(KEY_CODES.KEY_DOWN);
+        break;
+      default:
+        print("Warning Direction");
+        break;
+    }
+  }
+
+  void gyroSetup() async {
+    _streamSubscriptions.add(
+      accelerometerEvents.listen(
+        (AccelerometerEvent event) {
+          _accelerometerValues = <double>[event.x, event.y, event.z];
+          setState(
+            () {
+              xChange = _accelerometerValues[0].toDouble();
+              yChange = _accelerometerValues[1].toDouble();
+
+              if ((xChange) > 7) {
+                print("Swing left");
+                controlDirection('left');
+              } else if (xChange < -7) {
+                controlDirection('right');
+                print("Swing Right");
+              } else if (yChange > 7) {
+                controlDirection('up');
+                print("Swing UP");
+              } else if (yChange < -7) {
+                controlDirection('down');
+                print("Swing DOWN");
+              } else {
+                _history[0] = _accelerometerValues[0].toDouble();
+                _history[1] = _accelerometerValues[1].toDouble();
+              }
+            },
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -240,6 +301,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
     _volumeButtonSubscription?.cancel();
+    for (StreamSubscription<dynamic> subscription in _streamSubscriptions) {
+      subscription.cancel();
+    }
   }
 
   void setBar() {
@@ -369,7 +433,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               print("Power Pressed");
                               vibrate();
                               await SamsungSmartTV.wakeOnLan(tv.host, tv.mac);
-
                               await tv.sendKey(KEY_CODES.KEY_POWER);
                             },
                             child: Container(
@@ -619,8 +682,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   ),
                                 ),
                                 GestureDetector(
-                                  onTap: () {
+                                  onTap: () async {
                                     inputValue = "";
+                                    await tv.newSendKey("KEY_DTV_SIGNAL");
                                     showModalBottomSheet<void>(
                                         backgroundColor: Colors.transparent,
                                         context: context,

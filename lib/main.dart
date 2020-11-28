@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_samsung_remote/remote.dart';
-import 'package:flutter_samsung_remote/tv_provider.dart';
-import 'package:provider/provider.dart';
 import 'device.dart';
 import 'package:flutter_app_lock/flutter_app_lock.dart';
 import 'package:flutter_samsung_remote/lock_screen.dart';
