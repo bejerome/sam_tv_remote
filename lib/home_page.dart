@@ -54,6 +54,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   List<double> _history = [0.1, 0.1, 0.1];
   double xChange;
   double yChange;
+  bool isGestureActive = false;
+  Color mouseColor = AppColors.darkIcon;
   @override
   void initState() {
     mabialaFABController = AdvFabController();
@@ -84,23 +86,34 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     await setUp();
   }
 
+  void toggleGesture() {
+    var state = isGestureActive == true ? false : true;
+
+    setState(() {
+      isGestureActive = state;
+      mouseColor = state == true ? Colors.green : iconColor;
+    });
+  }
+
   void controlDirection(direction) async {
-    switch (direction) {
-      case 'left':
-        await tv.sendKey(KEY_CODES.KEY_LEFT);
-        break;
-      case 'right':
-        await tv.sendKey(KEY_CODES.KEY_RIGHT);
-        break;
-      case 'up':
-        await tv.sendKey(KEY_CODES.KEY_UP);
-        break;
-      case 'down':
-        await tv.sendKey(KEY_CODES.KEY_DOWN);
-        break;
-      default:
-        print("Warning Direction");
-        break;
+    if (isGestureActive) {
+      switch (direction) {
+        case 'left':
+          await tv.sendKey(KEY_CODES.KEY_LEFT);
+          break;
+        case 'right':
+          await tv.sendKey(KEY_CODES.KEY_RIGHT);
+          break;
+        case 'up':
+          await tv.sendKey(KEY_CODES.KEY_UP);
+          break;
+        case 'down':
+          await tv.sendKey(KEY_CODES.KEY_DOWN);
+          break;
+        default:
+          print("Warning Direction");
+          break;
+      }
     }
   }
 
@@ -114,16 +127,16 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               xChange = _accelerometerValues[0].toDouble();
               yChange = _accelerometerValues[1].toDouble();
 
-              if ((xChange) > 7) {
+              if ((xChange) > 5) {
                 print("Swing left");
                 controlDirection('left');
               } else if (xChange < -7) {
                 controlDirection('right');
                 print("Swing Right");
-              } else if (yChange > 7) {
+              } else if (yChange > 5) {
                 controlDirection('up');
                 print("Swing UP");
-              } else if (yChange < -7) {
+              } else if (yChange < -5) {
                 controlDirection('down');
                 print("Swing DOWN");
               } else {
@@ -668,6 +681,17 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                       color: iconColor,
                                       size: 38,
                                     ),
+                                  ),
+                                ),
+                                GestureDetector(
+                                  onTap: () async {
+                                    print("mouse");
+                                    toggleGesture();
+                                  },
+                                  child: Icon(
+                                    Icons.mouse,
+                                    color: mouseColor,
+                                    size: 28,
                                   ),
                                 ),
                                 GestureDetector(
