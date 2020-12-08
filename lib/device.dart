@@ -165,24 +165,23 @@ class SamsungSmartTV {
 
   // disconnect from device
 
-  sendKey(KEY_CODES key) async {
+  sendCommand({String method, Map params}) {
     if (!isConnected) {
       throw ('Not connected to device. Call `tv.connect()` first!');
     }
 
-    print("Send key command  ${key.toString().split('.').last}");
-    final data = json.encode({
-      "method": 'ms.remote.control',
-      "params": {
-        "Cmd": 'Click',
-        "DataOfCmd": key.toString().split('.').last,
-        "Option": false,
-        "TypeOfRemote": 'SendRemoteKey',
-      }
-    });
-
+    final data = json.encode({"method": method, "params": params});
     ws.sink.add(data);
+  }
 
+  sendKey(KEY_CODES key) async {
+    print("Send key command  ${key.toString().split('.').last}");
+    sendCommand(method: 'ms.remote.control', params: {
+      "Cmd": 'Click',
+      "DataOfCmd": key.toString().split('.').last,
+      "Option": false,
+      "TypeOfRemote": 'SendRemoteKey',
+    });
     // add a delay so TV has time to execute
     Timer(Duration(seconds: kConnectionTimeout), () {
       throw ('Unable to connect to TV: timeout');
@@ -192,22 +191,13 @@ class SamsungSmartTV {
   }
 
   newSendKey(String key) async {
-    if (!isConnected) {
-      throw ('Not connected to device. Call `tv.connect()` first!');
-    }
-
     print("Send key command  ${key.toString().split('.').last}");
-    final data = json.encode({
-      "method": 'ms.remote.control',
-      "params": {
-        "Cmd": 'Click',
-        "DataOfCmd": key.toString(),
-        "Option": false,
-        "TypeOfRemote": 'SendRemoteKey',
-      }
+    sendCommand(method: 'ms.remote.control', params: {
+      "Cmd": 'Click',
+      "DataOfCmd": key.toString(),
+      "Option": false,
+      "TypeOfRemote": 'SendRemoteKey',
     });
-
-    ws.sink.add(data);
 
     // add a delay so TV has time to execute
     Timer(Duration(seconds: kConnectionTimeout), () {
@@ -219,21 +209,12 @@ class SamsungSmartTV {
 
 // send text input
   sendInputString(String key) async {
-    if (!isConnected) {
-      throw ('Not connected to device. Call `tv.connect()` first!');
-    }
-
     print("Send key command  ${key.toString()}");
-    final data = json.encode({
-      "method": 'ms.remote.control',
-      "params": {
-        "Cmd": base64.encode(utf8.encode(key)),
-        "DataOfCmd": 'base64',
-        "TypeOfRemote": 'SendInputString',
-      }
+    sendCommand(method: 'ms.remote.control', params: {
+      "Cmd": base64.encode(utf8.encode(key)),
+      "DataOfCmd": 'base64',
+      "TypeOfRemote": 'SendInputString',
     });
-
-    ws.sink.add(data);
 
     // add a delay so TV has time to execute
     Timer(Duration(seconds: kConnectionTimeout), () {
@@ -245,15 +226,9 @@ class SamsungSmartTV {
 
 //Get installed Apps
   Future<http.Response> getInstalledApps() async {
-    if (!isConnected) {
-      throw ('Not connected to device. Call `tv.connect()` first!');
-    }
-
-    final data = json.encode({
-      "method": 'ms.channel.emit',
-      "params": {"data": '', "event": 'ed.installedApp.get', "to": 'host'}
-    });
-    ws.sink.add(data);
+    sendCommand(
+        method: 'ms.channel.emit',
+        params: {"data": '', "event": 'ed.installedApp.get', "to": 'host'});
     // add a delay so TV has time to execute
     Timer(Duration(seconds: kConnectionTimeout), () {
       throw ('Unable to connect to TV: timeout');
@@ -263,32 +238,20 @@ class SamsungSmartTV {
   }
 
   getApplication() async {
-    if (!isConnected) {
-      throw ('Not connected to device. Call `tv.connect()` first!');
-    }
-    final data = json.encode({
-      "method": 'ms.channel.emit',
-      "params": {"data": '', "event": 'ed.edenApp.get', "to": 'host'}
-    });
-    ws.sink.add(data);
+    sendCommand(
+        method: 'ms.channel.emit',
+        params: {"data": '', "event": 'ed.edenApp.get', "to": 'host'});
   }
 
   getApplicationIcon() async {
-    if (!isConnected) {
-      throw ('Not connected to device. Call `tv.connect()` first!');
-    }
-    final data = json.encode({
-      "method": 'ms.channel.emit',
-      "params": {
-        "data": {
-          "icon_path":
-              "/opt/share/webappservice/apps_icon/FirstScreen/11101200001/250x250.png",
-        },
-        "event": 'ed.apps.icon',
-        "to": 'host'
-      }
+    sendCommand(method: 'ms.channel.emit', params: {
+      "data": {
+        "icon_path":
+            "/opt/share/webappservice/apps_icon/FirstScreen/11101200001/250x250.png",
+      },
+      "event": 'ed.apps.icon',
+      "to": 'host'
     });
-    ws.sink.add(data);
   }
 
   //static method to discover Samsung Smart TVs in the network using the UPNP protocol
@@ -365,6 +328,53 @@ class SamsungSmartTV {
     } catch (e) {
       print("error waking lan");
       return false;
+    }
+  }
+
+  String registerReceiveCallback() {
+    return 'ms.voiceApp.standby';
+  }
+
+  // Activates voice recognition.
+  Future<http.Response> startVoiceRecognition() async {
+    sendCommand(method: 'ms.remote.control', params: {
+      'Cmd': 'Press',
+      'DataOfCmd': 'KEY_BT_VOICE',
+      'Option': "false",
+      'TypeOfRemote': 'SendRemoteKey'
+    });
+
+    // add a delay so TV has time to execute
+    Timer(Duration(seconds: kConnectionTimeout), () {
+      throw ('Unable to connect to TV: timeout');
+    });
+
+    return Future.delayed(Duration(milliseconds: kKeyDelay));
+  }
+
+  String unregisterReceiveCallback() {
+    return 'ms.voiceApp.standby';
+  }
+
+  void stopVoiceRecognition() {
+    // Activates voice recognition.
+
+    String register_receive_callback() {
+      return 'ms.voiceApp.hide';
+    }
+
+    sendCommand(method: 'ms.remote.control', params: {
+      'Cmd': 'Release',
+      'DataOfCmd': 'KEY_BT_VOICE',
+      'Option': "false",
+      'TypeOfRemote': 'SendRemoteKey'
+    });
+
+    sleep(Duration(milliseconds: kKeyDelay));
+    String unregister_receive_callback() {
+      // voice_callback,
+      // 'event',
+      return 'ms.voiceApp.hide';
     }
   }
 }
