@@ -141,7 +141,8 @@ class CustomVolButton extends StatelessWidget {
       @required this.upIcon,
       @required this.downIcon,
       @required this.upIconCallBack,
-      @required this.downIconCallBack})
+      @required this.downIconCallBack,
+      @required this.muteIconCallBack})
       : super(key: key);
 
   final Size size;
@@ -152,6 +153,7 @@ class CustomVolButton extends StatelessWidget {
   final IconData downIcon;
   final Function upIconCallBack;
   final Function downIconCallBack;
+  final Function muteIconCallBack;
   final String buttonLabel;
   @override
   Widget build(BuildContext context) {
@@ -177,16 +179,14 @@ class CustomVolButton extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () async {
-              // vibrate();
-              print("Mute");
-              // await tv.sendKey(KEY_CODES.KEY_MUTE);
+              muteIconCallBack();
             },
             child: Container(
               width: size.height * 0.11,
               height: size.height * 0.08,
               child: Icon(
                 Icons.volume_mute,
-                color: iconColor,
+                color: textColor,
                 size: 28,
               ),
             ),

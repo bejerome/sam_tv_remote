@@ -175,7 +175,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     if (_pref.getString('token') == null) {
       await discoverTV();
       token = await getTvToken();
-      if (tv.token != null) {
+      if (token != null) {
         _pref.setString('token', token);
         print("Set Token: $token");
       }
@@ -223,6 +223,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             mac: _pref.getString('mac'));
         await tv.connect(tokenValue: token);
         setColor(true);
+        print("Token: $token");
       }
     } catch (e) {
       print("failed to connect");
@@ -490,14 +491,27 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               vibrate();
                               await tv.sendKey(KEY_CODES.KEY_VOLDOWN);
                             },
+                            muteIconCallBack: () async {
+                              vibrate();
+                              await tv.sendKey(KEY_CODES.KEY_MUTE);
+                            },
                           ),
                           GestureDetector(
                             onTap: () async {
-                              await tv.newSendKey("KEY_ENTER");
+                              await tv.newSendKey("KEY_HOME");
                             },
-                            child: CustomCircle(
-                              size: size,
-                              background: backgroundColor,
+                            child: Stack(
+                              children: [
+                                CustomCircle(
+                                  size: size,
+                                  background: backgroundColor,
+                                ),
+                                Icon(
+                                  Icons.home,
+                                  color: textColor,
+                                  size: 40.0,
+                                )
+                              ],
                             ),
                           ),
                           Container(
@@ -569,32 +583,36 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           Positioned(
                             top: size.height * 0.13,
                             left: size.width / 2.6,
-                            child: Container(
-                              margin: EdgeInsets.zero,
-                              padding: EdgeInsets.all(5),
-                              width: size.width * 0.26,
-                              height: size.height / 7.5,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Colors.transparent,
-                                    Colors.transparent,
-                                    Colors.pinkAccent,
-                                    Colors.blue,
-                                    Color(0xFF584BD2)
-                                  ],
-                                ),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Container(
-                                decoration: new BoxDecoration(
-                                  color: backgroundColor,
+                            child: Stack(children: [
+                              Container(
+                                alignment: Alignment.center,
+                                padding: EdgeInsets.all(2),
+                                width: size.width * 0.24,
+                                height: size.height / 8.5,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.transparent,
+                                      Colors.pinkAccent,
+                                      Colors.blue,
+                                      Color(0xFF584BD2)
+                                    ],
+                                  ),
                                   shape: BoxShape.circle,
                                 ),
+                                child: Container(
+                                  padding: EdgeInsets.zero,
+                                  alignment: Alignment.center,
+                                  decoration: new BoxDecoration(
+                                    color: backgroundColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
                               ),
-                            ),
+                            ]),
                           ),
                           Positioned(
                             top: size.height / 8,
@@ -667,19 +685,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                       Icons.arrow_back,
                                       color: iconColor,
                                       size: 28,
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () async {
-                                    vibrate();
-                                    await tv.sendKey(KEY_CODES.KEY_HOME);
-                                  },
-                                  child: Container(
-                                    child: Icon(
-                                      Icons.home,
-                                      color: iconColor,
-                                      size: 38,
                                     ),
                                   ),
                                 ),
