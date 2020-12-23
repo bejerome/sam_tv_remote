@@ -356,14 +356,14 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                     padding: const EdgeInsets.only(top: 8.0, left: 8),
                     child: Center(
                         child: GestureDetector(
-                      onTap: () {
-                        mabialaFABController.collapseFAB();
-                      },
-                      child: Text(
-                        'Apps',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )),
+                            onTap: () {
+                              mabialaFABController.collapseFAB();
+                            },
+                            child: Icon(
+                              Icons.close,
+                              size: 25,
+                              color: Colors.white,
+                            ))),
                   ),
                 ]),
               ),
@@ -539,123 +539,94 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                         ],
                       ),
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 20),
+                    SizedBox(
+                      height: 50,
                       width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height / 2.6,
-                      child: Stack(
-                        children: <Widget>[
-                          Positioned(
-                            left: size.width / 2.6,
-                            top: -20,
-                            child: GestureDetector(
-                              onTap: () async {
-                                vibrate();
-                                await tv.sendKey(KEY_CODES.KEY_UP);
-                              },
-                              child: Icon(
-                                Icons.arrow_drop_up,
-                                color: Color(0xFF584BD2),
-                                size: 100,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: size.height / 8,
-                            left: 20,
-                            child: GestureDetector(
-                              onTap: () async {
-                                vibrate();
-                                await tv.sendKey(KEY_CODES.KEY_LEFT);
-                              },
-                              child: Icon(
-                                Icons.arrow_left,
-                                color: Color(0xFF584BD2),
-                                size: 100,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: size.height * 0.13,
-                            left: size.width / 2.6,
-                            child: Stack(children: [
-                              Container(
-                                alignment: Alignment.center,
-                                // padding: EdgeInsets.all(2),
-                                // width: size.width * 0.24,
-                                // height: size.height / 8.5,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.transparent,
-                                      Colors.pinkAccent,
-                                      Colors.blue,
-                                      Color(0xFF584BD2)
-                                    ],
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height / 2,
+                      child: Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: () async {
+                                      vibrate();
+                                      await tv.sendKey(KEY_CODES.KEY_UP);
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_drop_up,
+                                      color: Color(0xFF584BD2),
+                                      size: 100,
+                                    ),
                                   ),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Container(
-                                  padding: EdgeInsets.zero,
-                                  alignment: Alignment.center,
-                                  decoration: new BoxDecoration(
-                                    color: backgroundColor,
-                                    shape: BoxShape.circle,
+                                ]),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  GestureDetector(
+                                    onTap: () async {
+                                      vibrate();
+                                      await tv.sendKey(KEY_CODES.KEY_LEFT);
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_left,
+                                      color: Color(0xFF584BD2),
+                                      size: 100,
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      vibrate();
+                                      await tv.sendKey(KEY_CODES.KEY_ENTER);
+                                    },
+                                    child: Container(
+                                      height: 100,
+                                      width: 100,
+                                      child: FlareActor(
+                                        'assets/the_orb.flr',
+                                        alignment: Alignment.center,
+                                        fit: BoxFit.contain,
+                                        animation: 'Aura',
+                                      ),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      vibrate();
+                                      await tv.sendKey(KEY_CODES.KEY_RIGHT);
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_right,
+                                      color: Color(0xFF584BD2),
+                                      size: 100,
+                                    ),
+                                  ),
+                                ]),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                GestureDetector(
+                                  onTap: () async {
+                                    vibrate();
+                                    await tv.sendKey(KEY_CODES.KEY_DOWN);
+                                  },
+                                  child: Icon(
+                                    Icons.arrow_drop_down,
+                                    color: Color(0xFF584BD2),
+                                    size: 100,
                                   ),
                                 ),
-                              ),
-                              GestureDetector(
-                                onTap: () async {
-                                  vibrate();
-                                  await tv.sendKey(KEY_CODES.KEY_ENTER);
-                                },
-                                child: Container(
-                                  height: 100,
-                                  width: 100,
-                                  child: FlareActor(
-                                    'assets/the_orb.flr',
-                                    alignment: Alignment.center,
-                                    fit: BoxFit.contain,
-                                    animation: 'Aura',
-                                  ),
-                                ),
-                              )
-                            ]),
-                          ),
-                          Positioned(
-                            top: size.height / 8,
-                            right: size.width * 0.025,
-                            child: GestureDetector(
-                              onTap: () async {
-                                vibrate();
-                                await tv.sendKey(KEY_CODES.KEY_RIGHT);
-                              },
-                              child: Icon(
-                                Icons.arrow_right,
-                                color: Color(0xFF584BD2),
-                                size: 100,
-                              ),
+                              ],
                             ),
-                          ),
-                          Positioned(
-                            bottom: (size.height / 10) - 95,
-                            left: size.width / 2.6,
-                            child: GestureDetector(
-                              onTap: () async {
-                                vibrate();
-                                await tv.sendKey(KEY_CODES.KEY_DOWN);
-                              },
-                              child: Icon(
-                                Icons.arrow_drop_down,
-                                color: Color(0xFF584BD2),
-                                size: 100,
-                              ),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     Container(
@@ -668,19 +639,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
-                                GestureDetector(
-                                  onTap: () async {
-                                    vibrate();
-                                    await tv.sendKey(KEY_CODES.KEY_RETURN);
-                                  },
-                                  child: Container(
-                                    child: Icon(
-                                      Icons.arrow_back,
-                                      color: iconColor,
-                                      size: 28,
-                                    ),
-                                  ),
-                                ),
                                 GestureDetector(
                                   onTap: () async {
                                     print("mouse");
