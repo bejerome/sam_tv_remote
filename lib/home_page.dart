@@ -14,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:hardware_buttons/hardware_buttons.dart' as HardwareButtons;
 import 'package:virtual_keyboard/virtual_keyboard.dart';
 import 'package:sensors/sensors.dart';
+import 'package:flare_flutter/flare_actor.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key}) : super(key: key);
@@ -54,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   List<double> _history = [0.1, 0.1, 0.1];
   double xChange;
   double yChange;
+  double zChange;
   bool isGestureActive = false;
   Color mouseColor = AppColors.darkIcon;
   @override
@@ -126,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
             () {
               xChange = _accelerometerValues[0].toDouble();
               yChange = _accelerometerValues[1].toDouble();
-
+              zChange = _accelerometerValues[2].toDouble();
               if ((xChange) > 5) {
                 print("Swing left");
                 controlDirection('left');
@@ -136,9 +138,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
               } else if (yChange > 5) {
                 controlDirection('up');
                 print("Swing UP");
+                print("Z: $zChange");
               } else if (yChange < -5) {
                 controlDirection('down');
                 print("Swing DOWN");
+                print("Z: $zChange");
               } else {
                 _history[0] = _accelerometerValues[0].toDouble();
                 _history[1] = _accelerometerValues[1].toDouble();
@@ -423,7 +427,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
       body: Container(
           constraints:
               BoxConstraints(maxHeight: MediaQuery.of(context).size.height),
-          padding: EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(40.0),
           width: size.width,
           height: size.height,
           color: backgroundColor,
@@ -500,18 +504,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             onTap: () async {
                               await tv.newSendKey("KEY_HOME");
                             },
-                            child: Stack(
-                              children: [
-                                CustomCircle(
-                                  size: size,
-                                  background: backgroundColor,
-                                ),
-                                Icon(
-                                  Icons.home,
-                                  color: textColor,
-                                  size: 40.0,
-                                )
-                              ],
+                            child: CustomCircle(
+                              size: size,
+                              background: backgroundColor,
                             ),
                           ),
                           Container(
@@ -586,9 +581,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             child: Stack(children: [
                               Container(
                                 alignment: Alignment.center,
-                                padding: EdgeInsets.all(2),
-                                width: size.width * 0.24,
-                                height: size.height / 8.5,
+                                // padding: EdgeInsets.all(2),
+                                // width: size.width * 0.24,
+                                // height: size.height / 8.5,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     begin: Alignment.topLeft,
@@ -612,6 +607,22 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   ),
                                 ),
                               ),
+                              GestureDetector(
+                                onTap: () async {
+                                  vibrate();
+                                  await tv.sendKey(KEY_CODES.KEY_ENTER);
+                                },
+                                child: Container(
+                                  height: 100,
+                                  width: 100,
+                                  child: FlareActor(
+                                    'assets/the_orb.flr',
+                                    alignment: Alignment.center,
+                                    fit: BoxFit.contain,
+                                    animation: 'Aura',
+                                  ),
+                                ),
+                              )
                             ]),
                           ),
                           Positioned(
@@ -626,24 +637,6 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 Icons.arrow_right,
                                 color: Color(0xFF584BD2),
                                 size: 100,
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: size.height * 0.13,
-                            left: size.width / 2.6,
-                            child: GestureDetector(
-                              onTap: () async {
-                                vibrate();
-                                await tv.sendKey(KEY_CODES.KEY_ENTER);
-                              },
-                              child: Container(
-                                margin: EdgeInsets.zero,
-                                child: Icon(
-                                  Icons.adjust,
-                                  color: Color(0xFF584BD2),
-                                  size: 100,
-                                ),
                               ),
                             ),
                           ),

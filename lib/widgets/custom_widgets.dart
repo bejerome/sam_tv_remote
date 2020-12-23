@@ -50,14 +50,23 @@ class CustomCircle extends StatelessWidget {
         ),
         shape: BoxShape.circle,
       ),
-      child: Container(
-        padding: EdgeInsets.all(18),
-        width: size.width * 0.4,
-        height: size.width * 0.4,
-        decoration: new BoxDecoration(
-          color: background,
-          shape: BoxShape.circle,
-        ),
+      child: Stack(
+        children: [
+          Container(
+            padding: EdgeInsets.all(18),
+            width: size.width * 0.4,
+            height: size.width * 0.4,
+            decoration: new BoxDecoration(
+              color: background,
+              shape: BoxShape.circle,
+            ),
+          ),
+          Icon(
+            Icons.home,
+            size: 30.0,
+            color: Colors.white,
+          ),
+        ],
       ),
     );
   }
