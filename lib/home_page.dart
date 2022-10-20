@@ -11,7 +11,7 @@ import 'package:flutter_samsung_remote/widgets/custom_widgets.dart';
 import 'package:flutter_vibrate/flutter_vibrate.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:hardware_buttons/hardware_buttons.dart' as HardwareButtons;
+// import 'package:hardware_buttons/hardware_buttons.dart' as HardwareButtons;
 import 'package:virtual_keyboard/virtual_keyboard.dart';
 import 'package:sensors/sensors.dart';
 import 'package:flare_flutter/flare_actor.dart';
@@ -33,8 +33,8 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   Color sliderBackground = AppColors.darkButtonBackground;
   String inputValue = "";
   String _latestHardwareButtonEvent;
-  StreamSubscription<HardwareButtons.VolumeButtonEvent>
-      _volumeButtonSubscription;
+  // StreamSubscription<HardwareButtons.VolumeButtonEvent>
+  //     _volumeButtonSubscription;
   String token;
   bool status = false;
   SharedPreferences _pref;
@@ -78,13 +78,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           ? print("This device can vibrate")
           : print("This device cannot vibrate");
     });
-    _volumeButtonSubscription =
-        HardwareButtons.volumeButtonEvents.listen((event) {
-      setState(() {
-        _latestHardwareButtonEvent = event.toString();
-        volumeButtonActions(_latestHardwareButtonEvent);
-      });
-    });
+    // _volumeButtonSubscription =
+    //     HardwareButtons.volumeButtonEvents.listen((event) {
+    //   setState(() {
+    //     _latestHardwareButtonEvent = event.toString();
+    //     volumeButtonActions(_latestHardwareButtonEvent);
+    //   });
+    // });
     await setUp();
   }
 
@@ -318,7 +318,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
-    _volumeButtonSubscription?.cancel();
+    // _volumeButtonSubscription?.cancel();
     for (StreamSubscription<dynamic> subscription in _streamSubscriptions) {
       subscription.cancel();
     }

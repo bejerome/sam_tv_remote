@@ -9,7 +9,6 @@
      <uses-permission android:name="android.permission.VIBRATE"/>
      <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <application
-        android:name="io.flutter.app.FlutterApplication"
         android:label="Samsung TV Remote"
         android:icon="@mipmap/remote_icon"
         android:usesCleartextTraffic= "true">

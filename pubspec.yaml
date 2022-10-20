@@ -19,35 +19,35 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  rxdart: ^0.24.1
-  http: ^0.12.0+4
+  rxdart: ^0.27.5
+  http: ^0.13.5
   # vibration: ^1.6.1
-  hardware_buttons: ^1.0.0
+#  hardware_buttons: ^1.0.0
   hive: ^1.4.4
   hive_flutter: ^0.3.1
-  provider: ^4.3.2+2
+  provider: ^6.0.4
   fab_circular_menu: ^1.0.0
   virtual_keyboard: ^0.1.4
   wake_on_lan: ^1.1.1+1
   adv_fab: ^1.0.5
-  shared_preferences: ^0.5.12
+  shared_preferences: ^2.0.15
   flutter_vibrate: ^1.0.0
   web_socket_channel:
     git: https://github.com/kecson/web_socket_channel
   upnp: ^2.0.0+1
-  flutter_app_lock: ^1.4.0+1
-  sensors: ^0.4.2+6
-  flare_flutter: ^2.0.6
+  flutter_app_lock: ^2.0.0
+  sensors: ^2.0.3
+  flare_flutter: ^3.0.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
+  cupertino_icons: ^1.0.5
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_launcher_icons: "^0.7.3"
+  flutter_launcher_icons: ^0.8.1
 
 flutter_icons:
   android: "launcher_icon"

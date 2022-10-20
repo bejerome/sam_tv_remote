@@ -128,7 +128,7 @@ class SamsungSmartTV {
 
   Future<http.Response> getDeviceInfo() async {
     print("Get device info from $api");
-    return await http.get(this.api);
+    // return await http.get(this.api);
   }
 
   // disconnect from device
@@ -160,7 +160,7 @@ class SamsungSmartTV {
         }
         break;
     }
-    return http.post(address);
+    // return http.post(address);
   }
 
   // disconnect from device
