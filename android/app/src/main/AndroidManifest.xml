@@ -10,8 +10,7 @@
      <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <application
         android:label="Samsung TV Remote"
-        android:icon="@mipmap/remote_icon"
-        android:usesCleartextTraffic= "true">
+        android:icon="@mipmap/remote_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

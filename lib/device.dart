@@ -2,10 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:upnp/upnp.dart';
+// import 'package:upnp/upnp.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:wake_on_lan/wake_on_lan.dart';
 import 'key_codes.dart';
+// import 'package:upnp2/dial.dart';
+// import 'package:upnp2/media.dart';
+// import 'package:upnp2/router.dart';
+import 'package:upnp2/server.dart';
+import 'package:upnp2/upnp.dart';
 
 final int kConnectionTimeout = 60;
 final kKeyDelay = 200;
@@ -19,7 +24,7 @@ final kUpnpTimeout = 1000;
 
 // import { getLogger } from 'appium-logger'
 // import { KEY_CODES } from './constants'
-
+//
 // const log = getLogger('SamsungRemote')
 
 const CONNECTION_TIMEOUT = 60000;
@@ -60,6 +65,7 @@ class SamsungSmartTV {
 
     if (this.isConnected) {
       return;
+
     }
 
     // // make sure to turn on TV in case it is turned off
@@ -85,13 +91,14 @@ class SamsungSmartTV {
     }
 
     // log.info(`Connect to ${channel}`)
-    // ws = IOWebSocketChannel.connect(channel);
-    ws = IOWebSocketChannel.connect(channel,
-        badCertificateCallback: (X509Certificate cert, String host, int port) =>
-            true);
+    ws = IOWebSocketChannel.connect(channel);
+    // ws = IOWebSocketChannel.connect(channel,
+    //    X509Certificate cert, String host, int port) =>
+    //         true);
+
 
     ws.stream.listen((message) {
-      // timer?.cancel();
+      timer?.cancel();
 
       Map<String, dynamic> data;
       try {
@@ -128,7 +135,9 @@ class SamsungSmartTV {
 
   Future<http.Response> getDeviceInfo() async {
     print("Get device info from $api");
-    // return await http.get(this.api);
+    var uri = Uri.parse(this.api);
+    return await http.get(uri);
+
   }
 
   // disconnect from device
@@ -160,7 +169,8 @@ class SamsungSmartTV {
         }
         break;
     }
-    // return http.post(address);
+
+    return http.post(Uri(query: address));
   }
 
   // disconnect from device
@@ -302,7 +312,7 @@ class SamsungSmartTV {
     await client.start(ipv6: false);
 
     client.quickDiscoverClients().listen((client) async {
-      RegExp re = RegExp(r'^.*?Samsung.+UPnP.+SDK\/1\.0$');
+      RegExp re = RegExp(r'^.*?Samsung-.+UPnP.+SDK\/1\.0$');
 
       //ignore other devices
       if (!re.hasMatch(client.server)) {
@@ -318,7 +328,7 @@ class SamsungSmartTV {
         if (deviceExists == null) {
           print("Found ${device.friendlyName} on IP ${location.host}");
           final tv = SamsungSmartTV(
-              host: location.host, deviceName: device.friendlyName);
+              host: location.host, deviceName: device.friendlyName );
           tv.addService({
             "location": client.location,
             "server": client.server,
@@ -356,11 +366,11 @@ class SamsungSmartTV {
         return false;
       }
       // Create the IPv4 and MAC objects
-      IPv4Address ipv4Address = IPv4Address.from(ip);
-      MACAddress macAddress = MACAddress.from(mac);
+      IPv4Address ipv4Address = IPv4Address(ip);
+      MACAddress macAddress = MACAddress(mac);
       // Send the WOL packet
       // Port parameter is optional, set to 55 here as an example, but defaults to port 9
-      WakeOnLAN.from(ipv4Address, macAddress, port: 55).wake();
+      WakeOnLAN(ipv4Address, macAddress, port: 55).wake();
       return true;
     } catch (e) {
       print("error waking lan");

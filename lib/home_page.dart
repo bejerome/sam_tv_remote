@@ -15,7 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:virtual_keyboard/virtual_keyboard.dart';
 import 'package:sensors/sensors.dart';
 import 'package:flare_flutter/flare_actor.dart';
-
+// import 'package:upnp2/upnp.dart';
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key}) : super(key: key);
   @override
@@ -101,16 +101,16 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     if (isGestureActive) {
       switch (direction) {
         case 'left':
-          await tv.sendKey(KEY_CODES.KEY_LEFT);
+          // //await tv.sendKey(KEY_CODES.KEY_LEFT);
           break;
         case 'right':
-          await tv.sendKey(KEY_CODES.KEY_RIGHT);
+          //await tv.sendKey(KEY_CODES.KEY_RIGHT);
           break;
         case 'up':
-          await tv.sendKey(KEY_CODES.KEY_UP);
+          //await tv.sendKey(KEY_CODES.KEY_UP);
           break;
         case 'down':
-          await tv.sendKey(KEY_CODES.KEY_DOWN);
+          //await tv.sendKey(KEY_CODES.KEY_DOWN);
           break;
         default:
           print("Warning Direction");
@@ -169,7 +169,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
   }
 
   void showDisconnectState() async {
-    tv.disconnect();
+    // tv.disconnect();
     setColor(false);
   }
 
@@ -183,11 +183,11 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
         _pref.setString('token', token);
         print("Set Token: $token");
       }
-      var info = await tv.getDeviceInfo();
-      var details = jsonDecode(info.body);
-      _pref.setString('host', tv.host);
-      _pref.setString('mac', details['device']['wifiMac']);
-      print("Set Mac ${details['device']['wifiMac']}");
+      // var info = await tv.getDeviceInfo();
+      // var details = jsonDecode(info.body);
+      // _pref.setString('host', tv.host);
+      // _pref.setString('mac', details['device']['wifiMac']);
+      // print("Set Mac ${details['device']['wifiMac']}");
     }
     status = tv.isConnected;
     setColor(status);
@@ -249,7 +249,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
 
   Future<String> getTvToken() async {
     if (_pref.containsKey('token') != true) {
-      await tv.connect(tokenValue: token);
+       await tv.connect(tokenValue: token);
 
       token = tv.token;
 
@@ -264,13 +264,13 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     switch (status) {
       case 'VolumeButtonEvent.VOLUME_DOWN':
         {
-          await tv.sendKey(KEY_CODES.KEY_VOLDOWN);
+          //await tv.sendKey(KEY_CODES.KEY_VOLDOWN);
         }
         break;
 
       case 'VolumeButtonEvent.VOLUME_UP':
         {
-          await tv.sendKey(KEY_CODES.KEY_VOLUP);
+          //await tv.sendKey(KEY_CODES.KEY_VOLUP);
         }
         break;
 
@@ -349,48 +349,48 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Expanded(
-                child:
-                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0, left: 8),
-                    child: Center(
-                        child: GestureDetector(
-                            onTap: () {
-                              mabialaFABController.collapseFAB();
-                            },
-                            child: Icon(
-                              Icons.close,
-                              size: 25,
-                              color: Colors.white,
-                            ))),
-                  ),
-                ]),
-              ),
-              Expanded(
-                  flex: 5,
-                  child: ListView.builder(
-                      physics: BouncingScrollPhysics(),
-                      itemCount: 4,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              vibrate();
-                              mabialaFABController.collapseFAB();
-                              tv.openTVApp(myMapList['app'][index]);
-                            },
-                            child: Container(
-                              width: (MediaQuery.of(context).size.width / 100) *
-                                  25,
-                              color: backgroundColor,
-                              child: Image.asset(myMapList['logo'][index]),
-                            ),
-                          ),
-                        );
-                      }))
+            //   Expanded(
+            //     child:
+            //         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            //       Padding(
+            //         padding: const EdgeInsets.only(top: 8.0, left: 8),
+            //         child: Center(
+            //             child: GestureDetector(
+            //                 onTap: () {
+            //                   mabialaFABController.collapseFAB();
+            //                 },
+            //                 child: Icon(
+            //                   Icons.close,
+            //                   size: 25,
+            //                   color: Colors.white,
+            //                 ))),
+            //       ),
+            //     ]),
+            //   ),
+            //   Expanded(
+            //       flex: 5,
+            //       child: ListView.builder(
+            //           physics: BouncingScrollPhysics(),
+            //           itemCount: 4,
+            //           scrollDirection: Axis.horizontal,
+            //           itemBuilder: (BuildContext context, int index) {
+            //             return Padding(
+            //               padding: const EdgeInsets.all(8.0),
+            //               child: GestureDetector(
+            //                 onTap: () {
+            //                   vibrate();
+            //                   mabialaFABController.collapseFAB();
+            //                   // tv.openTVApp(myMapList['app'][index]);
+            //                 },
+            //                 child: Container(
+            //                   width: (MediaQuery.of(context).size.width / 100) *
+            //                       25,
+            //                   color: backgroundColor,
+            //                   child: Image.asset(myMapList['logo'][index]),
+            //                 ),
+            //               ),
+            //             );
+            //           }))
             ],
           ),
         ),
@@ -446,28 +446,28 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                          GestureDetector(
-                            onTap: () async {
-                              print("Power Pressed");
-                              vibrate();
-                              await SamsungSmartTV.wakeOnLan(tv.host, tv.mac);
-                              await tv.sendKey(KEY_CODES.KEY_POWER);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(5),
-                              width: size.height * 0.11,
-                              height: size.height * 0.11,
-                              decoration: new BoxDecoration(
-                                color: buttonBackgroundColor,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.power_settings_new,
-                                color: selectColor,
-                                size: 38,
-                              ),
-                            ),
-                          ),
+                          // GestureDetector(
+                          //   onTap: () async {
+                          //     print("Power Pressed");
+                          //     vibrate();
+                          //     await SamsungSmartTV.wakeOnLan(tv.host, tv.mac);
+                          //     //await tv.sendKey(KEY_CODES.KEY_POWER);
+                          //   },
+                          //   child: Container(
+                          //     padding: EdgeInsets.all(5),
+                          //     width: size.height * 0.11,
+                          //     height: size.height * 0.11,
+                          //     decoration: new BoxDecoration(
+                          //       color: buttonBackgroundColor,
+                          //       shape: BoxShape.circle,
+                          //     ),
+                          //     child: Icon(
+                          //       Icons.power_settings_new,
+                          //       color: selectColor,
+                          //       size: 38,
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -487,22 +487,22 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             upIconCallBack: () async {
                               print("Vol up");
                               vibrate();
-                              await tv.sendKey(KEY_CODES.KEY_VOLUP);
+                              //await tv.sendKey(KEY_CODES.KEY_VOLUP);
                             },
                             downIcon: Icons.remove,
                             downIconCallBack: () async {
                               print("Vol down");
                               vibrate();
-                              await tv.sendKey(KEY_CODES.KEY_VOLDOWN);
+                              //await tv.sendKey(KEY_CODES.KEY_VOLDOWN);
                             },
                             muteIconCallBack: () async {
                               vibrate();
-                              await tv.sendKey(KEY_CODES.KEY_MUTE);
+                              //await tv.sendKey(KEY_CODES.KEY_MUTE);
                             },
                           ),
                           GestureDetector(
                             onTap: () async {
-                              await tv.newSendKey("KEY_HOME");
+                             // await tv.newSendKey("KEY_HOME");
                             },
                             child: CustomCircle(
                               size: size,
@@ -553,76 +553,76 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  GestureDetector(
-                                    onTap: () async {
-                                      vibrate();
-                                      await tv.sendKey(KEY_CODES.KEY_UP);
-                                    },
-                                    child: Icon(
-                                      Icons.arrow_drop_up,
-                                      color: Color(0xFF584BD2),
-                                      size: 100,
-                                    ),
-                                  ),
+                                  // GestureDetector(
+                                  //   onTap: () async {
+                                  //     vibrate();
+                                  //     //await tv.sendKey(KEY_CODES.KEY_UP);
+                                  //   },
+                                  //   child: Icon(
+                                  //     Icons.arrow_drop_up,
+                                  //     color: Color(0xFF584BD2),
+                                  //     size: 100,
+                                  //   ),
+                                  // ),
                                 ]),
                             Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceEvenly,
                                 children: <Widget>[
-                                  GestureDetector(
-                                    onTap: () async {
-                                      vibrate();
-                                      await tv.sendKey(KEY_CODES.KEY_LEFT);
-                                    },
-                                    child: Icon(
-                                      Icons.arrow_left,
-                                      color: Color(0xFF584BD2),
-                                      size: 100,
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      vibrate();
-                                      await tv.sendKey(KEY_CODES.KEY_ENTER);
-                                    },
-                                    child: Container(
-                                      height: 100,
-                                      width: 100,
-                                      child: FlareActor(
-                                        'assets/the_orb.flr',
-                                        alignment: Alignment.center,
-                                        fit: BoxFit.contain,
-                                        animation: 'Aura',
-                                      ),
-                                    ),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () async {
-                                      vibrate();
-                                      await tv.sendKey(KEY_CODES.KEY_RIGHT);
-                                    },
-                                    child: Icon(
-                                      Icons.arrow_right,
-                                      color: Color(0xFF584BD2),
-                                      size: 100,
-                                    ),
-                                  ),
+                                  // GestureDetector(
+                                  //   onTap: () async {
+                                  //     vibrate();
+                                  //     //await tv.sendKey(KEY_CODES.KEY_LEFT);
+                                  //   },
+                                  //   child: Icon(
+                                  //     Icons.arrow_left,
+                                  //     color: Color(0xFF584BD2),
+                                  //     size: 100,
+                                  //   ),
+                                  // ),
+                                  // GestureDetector(
+                                  //   onTap: () async {
+                                  //     vibrate();
+                                  //     //await tv.sendKey(KEY_CODES.KEY_ENTER);
+                                  //   },
+                                  //   child: Container(
+                                  //     height: 100,
+                                  //     width: 100,
+                                  //     child: FlareActor(
+                                  //       'assets/the_orb.flr',
+                                  //       alignment: Alignment.center,
+                                  //       fit: BoxFit.contain,
+                                  //       animation: 'Aura',
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  // GestureDetector(
+                                  //   onTap: () async {
+                                  //     vibrate();
+                                  //     //await tv.sendKey(KEY_CODES.KEY_RIGHT);
+                                  //   },
+                                  //   child: Icon(
+                                  //     Icons.arrow_right,
+                                  //     color: Color(0xFF584BD2),
+                                  //     size: 100,
+                                  //   ),
+                                  // ),
                                 ]),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                GestureDetector(
-                                  onTap: () async {
-                                    vibrate();
-                                    await tv.sendKey(KEY_CODES.KEY_DOWN);
-                                  },
-                                  child: Icon(
-                                    Icons.arrow_drop_down,
-                                    color: Color(0xFF584BD2),
-                                    size: 100,
-                                  ),
-                                ),
+                                // GestureDetector(
+                                //   onTap: () async {
+                                //     vibrate();
+                                //     //await tv.sendKey(KEY_CODES.KEY_DOWN);
+                                //   },
+                                //   child: Icon(
+                                //     Icons.arrow_drop_down,
+                                //     color: Color(0xFF584BD2),
+                                //     size: 100,
+                                //   ),
+                                // ),
                               ],
                             ),
                           ],
@@ -639,131 +639,131 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                           Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
-                                GestureDetector(
-                                  onTap: () async {
-                                    print("mouse");
-                                    toggleGesture();
-                                  },
-                                  child: Icon(
-                                    Icons.mouse,
-                                    color: mouseColor,
-                                    size: 28,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () async {
-                                    print("home");
-                                    await tv.sendKey(KEY_CODES.KEY_MENU);
-                                  },
-                                  child: Icon(
-                                    Icons.settings,
-                                    color: iconColor,
-                                    size: 28,
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () async {
-                                    inputValue = "";
-                                    await tv.newSendKey("KEY_DTV_SIGNAL");
-                                    showModalBottomSheet<void>(
-                                        backgroundColor: Colors.transparent,
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return Container(
-                                              margin: EdgeInsets.only(
-                                                  top: 0, bottom: 30),
-                                              height: 400,
-                                              color: Colors.transparent,
-                                              child: Center(
-                                                  child: Container(
-                                                // Keyboard is transparent
-                                                color: Colors.teal,
-                                                child: VirtualKeyboard(
-                                                    alwaysCaps: isAlwaysCaps,
-                                                    // Default height is 300
-                                                    height: 300,
-                                                    // Default is black
-                                                    textColor: Colors.white,
-                                                    // Default 14
-                                                    fontSize: 20,
-                                                    // [A-Z, 0-9]
-                                                    type: VirtualKeyboardType
-                                                        .Alphanumeric,
-                                                    // Callback for key press event
-                                                    onKeyPress: (key) async {
-                                                      if (key.keyType ==
-                                                          VirtualKeyboardKeyType
-                                                              .String) {
-                                                        var txt =
-                                                            (isAlwaysCaps ==
-                                                                    true)
-                                                                ? key.capsText
-                                                                : key.text
-                                                                    .toString();
-                                                        inputValue += txt;
-                                                      } else if (key.keyType ==
-                                                          VirtualKeyboardKeyType
-                                                              .Action) {
-                                                        switch (key.action
-                                                            .toString()) {
-                                                          case "VirtualKeyboardKeyAction.Backspace":
-                                                            print("backspace");
-                                                            if (inputValue
-                                                                    .length ==
-                                                                0) {
-                                                              return;
-                                                            } else {
-                                                              print(
-                                                                  "backspace");
-                                                              inputValue = inputValue
-                                                                  .substring(
-                                                                      0,
-                                                                      inputValue
-                                                                              .length -
-                                                                          1);
-                                                            }
-                                                            break;
-                                                          case "VirtualKeyboardKeyAction.Return":
-                                                            await tv.sendKey(
-                                                                KEY_CODES
-                                                                    .KEY_ENTER);
-                                                            break;
-                                                          case "VirtualKeyboardKeyAction.Space":
-                                                            inputValue += " ";
-                                                            break;
-                                                          case "VirtualKeyboardKeyAction.Shift":
-                                                            setState(() {
-                                                              if (isAlwaysCaps ==
-                                                                  true) {
-                                                                isAlwaysCaps =
-                                                                    false;
-                                                              } else {
-                                                                isAlwaysCaps =
-                                                                    true;
-                                                              }
-                                                            });
-
-                                                            break;
-                                                          default:
-                                                        }
-                                                      }
-                                                      // print(inputValue);
-                                                      await tv.sendInputString(
-                                                          inputValue);
-
-                                                      // await tv.newSendKey(
-                                                      //     "KEY_" + key.text);
-                                                      //search KEY_DTV_SIGNAL
-                                                    }),
-                                              )));
-                                        });
-                                  },
-                                  child: Icon(
-                                    Icons.keyboard,
-                                    color: iconColor,
-                                    size: 28,
-                                  ),
-                                ),
+                                // GestureDetector(
+                                //   onTap: () async {
+                                //     print("mouse");
+                                //     toggleGesture();
+                                //   },
+                                //   child: Icon(
+                                //     Icons.mouse,
+                                //     color: mouseColor,
+                                //     size: 28,
+                                //   ),
+                                // ),
+                                // GestureDetector(
+                                //   onTap: () async {
+                                //     print("home");
+                                //     //await tv.sendKey(KEY_CODES.KEY_MENU);
+                                //   },
+                                //   child: Icon(
+                                //     Icons.settings,
+                                //     color: iconColor,
+                                //     size: 28,
+                                //   ),
+                                // ),
+                                // GestureDetector(
+                                //   onTap: () async {
+                                //     inputValue = "";
+                                //    // await tv.newSendKey("KEY_DTV_SIGNAL");
+                                //     showModalBottomSheet<void>(
+                                //         backgroundColor: Colors.transparent,
+                                //         context: context,
+                                //         builder: (BuildContext context) {
+                                //           return Container(
+                                //               margin: EdgeInsets.only(
+                                //                   top: 0, bottom: 30),
+                                //               height: 400,
+                                //               color: Colors.transparent,
+                                //               child: Center(
+                                //                   child: Container(
+                                //                 // Keyboard is transparent
+                                //                 color: Colors.teal,
+                                //                 child: VirtualKeyboard(
+                                //                     alwaysCaps: isAlwaysCaps,
+                                //                     // Default height is 300
+                                //                     height: 300,
+                                //                     // Default is black
+                                //                     textColor: Colors.white,
+                                //                     // Default 14
+                                //                     fontSize: 20,
+                                //                     // [A-Z, 0-9]
+                                //                     type: VirtualKeyboardType
+                                //                         .Alphanumeric,
+                                //                     // Callback for key press event
+                                //                     onKeyPress: (key) async {
+                                //                       if (key.keyType ==
+                                //                           VirtualKeyboardKeyType
+                                //                               .String) {
+                                //                         var txt =
+                                //                             (isAlwaysCaps ==
+                                //                                     true)
+                                //                                 ? key.capsText
+                                //                                 : key.text
+                                //                                     .toString();
+                                //                         inputValue += txt;
+                                //                       } else if (key.keyType ==
+                                //                           VirtualKeyboardKeyType
+                                //                               .Action) {
+                                //                         switch (key.action
+                                //                             .toString()) {
+                                //                           case "VirtualKeyboardKeyAction.Backspace":
+                                //                             print("backspace");
+                                //                             if (inputValue
+                                //                                     .length ==
+                                //                                 0) {
+                                //                               return;
+                                //                             } else {
+                                //                               print(
+                                //                                   "backspace");
+                                //                               inputValue = inputValue
+                                //                                   .substring(
+                                //                                       0,
+                                //                                       inputValue
+                                //                                               .length -
+                                //                                           1);
+                                //                             }
+                                //                             break;
+                                //                           case "VirtualKeyboardKeyAction.Return":
+                                //                             //await tv.sendKey(
+                                //                             //     KEY_CODES
+                                //                             //         .KEY_ENTER);
+                                //                             break;
+                                //                           case "VirtualKeyboardKeyAction.Space":
+                                //                             inputValue += " ";
+                                //                             break;
+                                //                           case "VirtualKeyboardKeyAction.Shift":
+                                //                             setState(() {
+                                //                               if (isAlwaysCaps ==
+                                //                                   true) {
+                                //                                 isAlwaysCaps =
+                                //                                     false;
+                                //                               } else {
+                                //                                 isAlwaysCaps =
+                                //                                     true;
+                                //                               }
+                                //                             });
+                                //
+                                //                             break;
+                                //                           default:
+                                //                         }
+                                //                       }
+                                //                       // print(inputValue);
+                                //                       // await tv.sendInputString(
+                                //                       //     inputValue);
+                                //
+                                //                       //// await tv.newSendKey(
+                                //                       //     "KEY_" + key.text);
+                                //                       //search KEY_DTV_SIGNAL
+                                //                     }),
+                                //               )));
+                                //         });
+                                //   },
+                                //   child: Icon(
+                                //     Icons.keyboard,
+                                //     color: iconColor,
+                                //     size: 28,
+                                //   ),
+                                // ),
                               ]),
                         ],
                       ),

@@ -36,7 +36,7 @@ class UniversalControllerApp extends StatelessWidget {
                       color: Colors.yellow,
                     ),
                     onPressed: () async {
-                      await tv.sendKey(KEY_CODES.KEY_STOP);
+                      // await tv.sendKey(KEY_CODES.KEY_STOP);
                       toggleFab();
                     }),
                 IconButton(
@@ -46,7 +46,7 @@ class UniversalControllerApp extends StatelessWidget {
                       color: Colors.white,
                     ),
                     onPressed: () async {
-                      await tv.sendKey(KEY_CODES.KEY_REWIND);
+                      // await tv.sendKey(KEY_CODES.KEY_REWIND);
                       toggleFab();
                     }),
                 IconButton(
@@ -56,7 +56,7 @@ class UniversalControllerApp extends StatelessWidget {
                       color: Colors.red,
                     ),
                     onPressed: () async {
-                      await tv.sendKey(KEY_CODES.KEY_PLAY);
+                      // await tv.sendKey(KEY_CODES.KEY_PLAY);
                       toggleFab();
                     }),
                 IconButton(
@@ -66,7 +66,7 @@ class UniversalControllerApp extends StatelessWidget {
                       color: Colors.white,
                     ),
                     onPressed: () async {
-                      await tv.sendKey(KEY_CODES.KEY_FF);
+                      // await tv.sendKey(KEY_CODES.KEY_FF);
                       toggleFab();
                     }),
                 IconButton(
@@ -76,7 +76,7 @@ class UniversalControllerApp extends StatelessWidget {
                       color: Colors.cyanAccent,
                     ),
                     onPressed: () async {
-                      await tv.sendKey(KEY_CODES.KEY_PAUSE);
+                      // await tv.sendKey(KEY_CODES.KEY_PAUSE);
                       toggleFab();
                     })
               ]),
