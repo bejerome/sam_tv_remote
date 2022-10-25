@@ -2,8 +2,6 @@ import 'package:fab_circular_menu/fab_circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_samsung_remote/app_colors.dart';
 import 'package:flutter_samsung_remote/home_page.dart';
-import 'package:flutter_samsung_remote/key_codes.dart';
-import 'package:flutter_samsung_remote/main.dart';
 
 class UniversalControllerApp extends StatelessWidget {
   final GlobalKey<FabCircularMenuState> fabKey = GlobalKey();

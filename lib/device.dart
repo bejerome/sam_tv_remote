@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'package:http/http.dart' as http;
 // import 'package:upnp/upnp.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -10,7 +9,6 @@ import 'key_codes.dart';
 // import 'package:upnp2/dial.dart';
 // import 'package:upnp2/media.dart';
 // import 'package:upnp2/router.dart';
-import 'package:upnp2/server.dart';
 import 'package:upnp2/upnp.dart';
 
 final int kConnectionTimeout = 60;
@@ -174,7 +172,7 @@ class SamsungSmartTV {
         break;
     }
 
-    return http.post(Uri(query: address));
+    return http.post(Uri.parse(address));
   }
 
   // disconnect from device

@@ -101,7 +101,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     if (isGestureActive) {
       switch (direction) {
         case 'left':
-          // await tv.sendKey(KEY_CODES.KEY_LEFT);
+          await tv.sendKey(KEY_CODES.KEY_LEFT);
           break;
         case 'right':
           await tv.sendKey(KEY_CODES.KEY_RIGHT);
@@ -349,48 +349,48 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-            //   Expanded(
-            //     child:
-            //         Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            //       Padding(
-            //         padding: const EdgeInsets.only(top: 8.0, left: 8),
-            //         child: Center(
-            //             child: GestureDetector(
-            //                 onTap: () {
-            //                   mabialaFABController.collapseFAB();
-            //                 },
-            //                 child: Icon(
-            //                   Icons.close,
-            //                   size: 25,
-            //                   color: Colors.white,
-            //                 ))),
-            //       ),
-            //     ]),
-            //   ),
-            //   Expanded(
-            //       flex: 5,
-            //       child: ListView.builder(
-            //           physics: BouncingScrollPhysics(),
-            //           itemCount: 4,
-            //           scrollDirection: Axis.horizontal,
-            //           itemBuilder: (BuildContext context, int index) {
-            //             return Padding(
-            //               padding: const EdgeInsets.all(8.0),
-            //               child: GestureDetector(
-            //                 onTap: () {
-            //                   vibrate();
-            //                   mabialaFABController.collapseFAB();
-            //                   // tv.openTVApp(myMapList['app'][index]);
-            //                 },
-            //                 child: Container(
-            //                   width: (MediaQuery.of(context).size.width / 100) *
-            //                       25,
-            //                   color: backgroundColor,
-            //                   child: Image.asset(myMapList['logo'][index]),
-            //                 ),
-            //               ),
-            //             );
-            //           }))
+              Expanded(
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0, left: 8),
+                    child: Center(
+                        child: GestureDetector(
+                            onTap: () {
+                              mabialaFABController.collapseFAB();
+                            },
+                            child: Icon(
+                              Icons.close,
+                              size: 25,
+                              color: Colors.white,
+                            ))),
+                  ),
+                ]),
+              ),
+              Expanded(
+                  flex: 5,
+                  child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      itemCount: 4,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              vibrate();
+                              mabialaFABController.collapseFAB();
+                              tv.openTVApp(myMapList['app'][index]);
+                            },
+                            child: Container(
+                              width: (MediaQuery.of(context).size.width / 100) *
+                                  25,
+                              color: backgroundColor,
+                              child: Image.asset(myMapList['logo'][index]),
+                            ),
+                          ),
+                        );
+                      }))
             ],
           ),
         ),
@@ -553,17 +553,17 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  // GestureDetector(
-                                  //   onTap: () async {
-                                  //     vibrate();
-                                  //     await tv.sendKey(KEY_CODES.KEY_UP);
-                                  //   },
-                                  //   child: Icon(
-                                  //     Icons.arrow_drop_up,
-                                  //     color: Color(0xFF584BD2),
-                                  //     size: 100,
-                                  //   ),
-                                  // ),
+                                  GestureDetector(
+                                    onTap: () async {
+                                      vibrate();
+                                      await tv.sendKey(KEY_CODES.KEY_UP);
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_drop_up,
+                                      color: Color(0xFF584BD2),
+                                      size: 100,
+                                    ),
+                                  ),
                                 ]),
                             Row(
                                 mainAxisAlignment:

@@ -34,9 +34,6 @@ dependencies:
   shared_preferences:
   flutter_vibrate:
   web_socket_channel: ^2.2.0
-#  web_socket_channel:
-#    git: https://github.com/kecson/web_socket_channel
-#  upnp:
   flutter_app_lock:
   sensors:
   flare_flutter:
