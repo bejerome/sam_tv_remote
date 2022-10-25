@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 // import 'package:upnp/upnp.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:wake_on_lan/wake_on_lan.dart';
 import 'key_codes.dart';
@@ -42,7 +43,7 @@ class SamsungSmartTV {
   bool isConnected = false;
   String token;
   dynamic info;
-  IOWebSocketChannel ws;
+  WebSocketChannel ws;
   Timer timer;
 
   SamsungSmartTV({this.host, this.mac, this.deviceName})
@@ -91,10 +92,13 @@ class SamsungSmartTV {
     }
 
     // log.info(`Connect to ${channel}`)
-    ws = IOWebSocketChannel.connect(channel);
+    // ws = WebSocketChannel.connect(Uri.parse(channel));
+     ws = IOWebSocketChannel.connect(channel);
     // ws = IOWebSocketChannel.connect(channel,
     //    X509Certificate cert, String host, int port) =>
     //         true);
+
+
 
 
     ws.stream.listen((message) {
