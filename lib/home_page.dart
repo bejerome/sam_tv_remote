@@ -101,16 +101,16 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
     if (isGestureActive) {
       switch (direction) {
         case 'left':
-          // //await tv.sendKey(KEY_CODES.KEY_LEFT);
+          // await tv.sendKey(KEY_CODES.KEY_LEFT);
           break;
         case 'right':
-          //await tv.sendKey(KEY_CODES.KEY_RIGHT);
+          await tv.sendKey(KEY_CODES.KEY_RIGHT);
           break;
         case 'up':
-          //await tv.sendKey(KEY_CODES.KEY_UP);
+          await tv.sendKey(KEY_CODES.KEY_UP);
           break;
         case 'down':
-          //await tv.sendKey(KEY_CODES.KEY_DOWN);
+          await tv.sendKey(KEY_CODES.KEY_DOWN);
           break;
         default:
           print("Warning Direction");
@@ -451,7 +451,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                               print("Power Pressed");
                               vibrate();
                               await SamsungSmartTV.wakeOnLan(tv.host, tv.mac);
-                              //await tv.sendKey(KEY_CODES.KEY_POWER);
+                              await tv.sendKey(KEY_CODES.KEY_POWER);
                             },
                             child: Container(
                               padding: EdgeInsets.all(5),
@@ -497,12 +497,12 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                             },
                             muteIconCallBack: () async {
                               vibrate();
-                              //await tv.sendKey(KEY_CODES.KEY_MUTE);
+                              await tv.sendKey(KEY_CODES.KEY_MUTE);
                             },
                           ),
                           GestureDetector(
                             onTap: () async {
-                             // await tv.newSendKey("KEY_HOME");
+                             await tv.sendKey(KEY_CODES.KEY_HOME);
                             },
                             child: CustomCircle(
                               size: size,
@@ -556,7 +556,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   // GestureDetector(
                                   //   onTap: () async {
                                   //     vibrate();
-                                  //     //await tv.sendKey(KEY_CODES.KEY_UP);
+                                  //     await tv.sendKey(KEY_CODES.KEY_UP);
                                   //   },
                                   //   child: Icon(
                                   //     Icons.arrow_drop_up,
@@ -572,7 +572,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   GestureDetector(
                                     onTap: () async {
                                       vibrate();
-                                      //await tv.sendKey(KEY_CODES.KEY_LEFT);
+                                      await tv.sendKey(KEY_CODES.KEY_LEFT);
                                     },
                                     child: Icon(
                                       Icons.arrow_left,
@@ -583,7 +583,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   GestureDetector(
                                     onTap: () async {
                                       vibrate();
-                                      //await tv.sendKey(KEY_CODES.KEY_ENTER);
+                                      await tv.sendKey(KEY_CODES.KEY_ENTER);
                                     },
                                     child: Container(
                                       height: 100,
@@ -599,7 +599,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                   GestureDetector(
                                     onTap: () async {
                                       vibrate();
-                                      //await tv.sendKey(KEY_CODES.KEY_RIGHT);
+                                      await tv.sendKey(KEY_CODES.KEY_RIGHT);
                                     },
                                     child: Icon(
                                       Icons.arrow_right,
@@ -615,7 +615,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 GestureDetector(
                                   onTap: () async {
                                     vibrate();
-                                    //await tv.sendKey(KEY_CODES.KEY_DOWN);
+                                    await tv.sendKey(KEY_CODES.KEY_DOWN);
                                   },
                                   child: Icon(
                                     Icons.arrow_drop_down,
@@ -653,7 +653,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 GestureDetector(
                                   onTap: () async {
                                     print("home");
-                                    //await tv.sendKey(KEY_CODES.KEY_MENU);
+                                    await tv.sendKey(KEY_CODES.KEY_MENU);
                                   },
                                   child: Icon(
                                     Icons.settings,
@@ -664,7 +664,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                 GestureDetector(
                                   onTap: () async {
                                     inputValue = "";
-                                   // await tv.newSendKey("KEY_DTV_SIGNAL");
+                                   await tv.sendKey(KEY_CODES.KEY_DTV_SIGNAL);
                                     showModalBottomSheet<void>(
                                         backgroundColor: Colors.transparent,
                                         context: context,
@@ -724,9 +724,9 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                                             }
                                                             break;
                                                           case "VirtualKeyboardKeyAction.Return":
-                                                            //await tv.sendKey(
-                                                            //     KEY_CODES
-                                                            //         .KEY_ENTER);
+                                                            await tv.sendKey(
+                                                                KEY_CODES
+                                                                    .KEY_ENTER);
                                                             break;
                                                           case "VirtualKeyboardKeyAction.Space":
                                                             inputValue += " ";
@@ -751,7 +751,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver {
                                                       // await tv.sendInputString(
                                                       //     inputValue);
 
-                                                      //// await tv.newSendKey(
+                                                      //await tv.sendKey(
                                                       //     "KEY_" + key.text);
                                                       //search KEY_DTV_SIGNAL
                                                     }),
